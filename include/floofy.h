@@ -35,7 +35,7 @@ void floofy_test_function(FloofyTestFunction func);
 /// @param func The new test.
 /// @param file The file in which the test is defined.
 /// @param line The line on which the test is started.
-void floofy_test_function_full(FloofyTestFunction func, char* file, uint line);
+void floofy_test_function_full(FloofyTestFunction func, char* file, uint line, char* funcName);
 
 /// @brief Checks whether condition is false, printing the formatted message to Floofy's output.
 /// @param condition The condition we're checking against.
@@ -51,11 +51,10 @@ void floofy_test_assert(bool condition, const char* const error, ...);
 void floofy_test_assert_full(char* file, uint line, bool value, const char* const error, ...);
 
 
-#define FLOOFY_TEST_REGISTER(name, func)														\
-	static void name##_function(void);															\
-	void name##_function() func																	\
-	static void name##_register(void) __attribute__((constructor));								\
-	void name##_register(void) { floofy_test_function_full(name##_function, __FILE__, __LINE__); }
+#define FLOOFY_TEST_REGISTER(test_func_name)																						\	
+	static void test_func_name(void);																								\
+	static void test_func_name##_register(void) __attribute__((constructor));														\
+	void test_func_name##_register(void) { floofy_test_function_full(test_func_name, __FILE__, __LINE__, #test_func_name); }
 
 #define FLOOFY_TEST_ASSERT(condition, error, ...)									\
 	floofy_test_assert_full(__FILE__, __LINE__, condition, error, __VA_ARGS__)

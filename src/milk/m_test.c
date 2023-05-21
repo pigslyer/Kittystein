@@ -7,7 +7,9 @@
 
 static int testValues[] = {10, 20, 30, 40, 50, 60};
 
-FLOOFY_TEST_REGISTER(linked_list_test,
+FLOOFY_TEST_REGISTER(linked_list_test)
+
+void linked_list_test()
 {
 	int tempInt;
 	int* tempIntPtr;
@@ -30,4 +32,4 @@ FLOOFY_TEST_REGISTER(linked_list_test,
 	*tempIntPtr = testValues[1];
 	tempIntPtr = (int*) milk_linked_list_node_value(tempNode);
 	FLOOFY_TEST_ASSERT(*tempIntPtr == testValues[1], "Linked list node value did not change despite setting pointer! Current: %d, Expected: %d!", *tempIntPtr, testValues[1]);
-})
+}

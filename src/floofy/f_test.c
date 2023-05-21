@@ -15,7 +15,7 @@ void floofy_test_function(FloofyTestFunction func)
 	registeredFunctions[registeredFunctionCount++] = func;
 }
 
-void floofy_test_function_full(FloofyTestFunction func, char* file, uint line)
+void floofy_test_function_full(FloofyTestFunction func, char* file, uint line, char* funcName)
 {
 	registeredFunctions[registeredFunctionCount++] = func;
 }
