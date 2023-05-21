@@ -90,11 +90,19 @@ void watchman_log(W_LOG_TYPE type, const char* message, va_list args)
 		log_type = "[MESSAGE]";
 	}
 
-	char buffer_header[64];
-	char buffer_message[512];
+	char buffer_header[4096];
+	char buffer_message[4096];
 
-	sprintf_s(buffer_header, sizeof buffer_header, "%s %d:%d:%d.%lld: %s", log_type, info->tm_hour, info->tm_min, info->tm_sec, milliseconds, message);
-	vsprintf_s(buffer_message, sizeof buffer_message, buffer_header, args);
-
-	watchman_stream_sendline(buffer_message);
+	if (sprintf_s(buffer_header, sizeof buffer_header, "%s %02d:%02d:%02d.%lld: %s", log_type, info->tm_hour, info->tm_min, info->tm_sec, milliseconds, message) <= 0)
+	{
+		watchman_stream_sendline("CHARACTER BUFFER OVERRAN DURING HEADER GENERATION!");
+	} 
+	else if (vsprintf_s(buffer_message, sizeof buffer_message, buffer_header, args) <= 0)
+	{
+		watchman_stream_sendline("CHARACTER BUFFER OVERRAN DURING MESSAGE GENERATION!");	
+	}
+	else
+	{
+		watchman_stream_sendline(buffer_message);
+	}
 }
