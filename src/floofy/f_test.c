@@ -47,9 +47,9 @@ void floofy_test_assert_full(char* file, uint line, bool value, const char* cons
 {
 	if (!value)
 	{
-		char* buffer[128];
+		char buffer[4096];
 		
-		if (sprintf_s(buffer, sizeof buffer, "[%s:%d] - %s", file, line, error) > 0)
+		if (sprintf_s(buffer, sizeof buffer, "{%s:%d} - %s", file, line, error) > 0)
 		{
 			va_list args;
 			va_start(args, error);
