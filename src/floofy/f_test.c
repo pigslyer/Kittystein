@@ -27,7 +27,7 @@ void floofy_test_run()
 		registeredFunctions[i]();
 	}
 
-	watchman_log_message("All %d registered test functions have been run by floofy.", registeredFunctionCount);
+	WATCHMAN_LOG_MESSAGE_ARG("All %d registered test functions have been run by Floofy.", registeredFunctionCount);
 }
 
 void floofy_test_assert(bool value, const char* const error, ...)
