@@ -7,6 +7,8 @@ LinkedList* milk_linked_list_new(size_t elementSize)
 {
 	LinkedList* ret = (LinkedList*) malloc(sizeof *ret);
 	ret->first = null;
+	ret->count = 0;
+	ret->elementSize = elementSize;
 	return ret;
 }
 
