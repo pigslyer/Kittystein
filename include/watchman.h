@@ -10,7 +10,11 @@
 #ifndef WATCHMAN_H
 #define WATCHMAN_H
 
-#include <stdarg.h>
+#ifndef WATCHMAN_INTERNAL
+
+
+
+#endif
 
 /// @brief Logs error to watchman.
 /// @param message The intended error message.
@@ -26,6 +30,8 @@ void watchman_log_message(const char* message, ...);
 
 
 #ifdef WATCHMAN_EXPOSE_VA_LIST
+
+#include <stdarg.h>
 
 /// @brief Logs error to watchman.
 /// @param message The intended error message.
