@@ -1,6 +1,5 @@
 #ifndef STEIN_H
-
-#include <stdbool.h>
+#define STEIN_H
 
 void stein_run(void);
 
