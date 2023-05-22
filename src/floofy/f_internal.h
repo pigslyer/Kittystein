@@ -3,9 +3,20 @@
 #define FLOOFY_INTERNAL
 #define FLOOFY_EXPOSE_TEST_SUITE
 
+#include <slyertype.h>
+
 typedef void (*FloofyTestFunction)(void);
 
-extern FloofyTestFunction registeredFunctions[];
+typedef struct
+{
+	FloofyTestFunction 	functionCallback;
+	const char*			functionName;
+	const char* 		filePath;
+	uint 				lineNumber;
+} FloofyTest;
+
+extern uint		  		floofyFunctionCount;
+extern FloofyTest 		floofyRegisteredFunctions[];
 
 #include <floofy.h>
 #endif
