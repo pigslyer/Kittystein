@@ -14,7 +14,7 @@
 
 #ifndef WATCHMAN_INTERNAL
 
-
+typedef void (*WatchmanStreamCallback)(char*);
 
 #endif
 
@@ -38,6 +38,14 @@ void watchman_log_message(const char* message, ...);
 
 #define WATCHMAN_LOG_MESSAGE_ARG(message, ...) 	watchman_log_message("{"__FILE__":%d} "message, __LINE__, __VA_ARGS__)
 #define WATCHMAN_LOG_MESSAGE(message) 			watchman_log_message("{"__FILE__":%d} "message, __LINE__)
+
+/// @brief Sets the output stream watchman uses for all messages.
+/// @param callback The function that should be called with all messages.
+void watchman_stream_out_set(WatchmanStreamCallback callback);
+
+/// @brief Resets the output stream watchman uses to stdout.
+void watchman_stream_out_reset(void);
+
 
 #ifdef WATCHMAN_EXPOSE_VA_LIST
 

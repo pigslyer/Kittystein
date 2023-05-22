@@ -4,7 +4,9 @@
 
 #include <slyertype.h>
 
-void watchman_stream_sendline(char* buffer);
+typedef void (*WatchmanStreamCallback)(char*);
+
+void watchman_stream_push(char* message);
 
 #include <watchman.h>
 #endif
