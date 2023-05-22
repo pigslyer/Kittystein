@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-#include <slyertype.h>
-
 #define WATCHMAN_EXPOSE_VA_LIST
 #include <watchman.h>
 

@@ -13,7 +13,7 @@
 #ifndef FLOOFY_H
 #define FLOOFY_H
 
-#include <slyertype.h>
+#include <delight.h>
 
 #ifndef FLOOFY_INTERNAL
 

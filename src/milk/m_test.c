@@ -1,7 +1,5 @@
 #include "m_internal.h"
 
-#include <stdlib.h>
-
 #define FLOOFY_EXPOSE_TEST_SUITE
 #include <floofy.h>
 

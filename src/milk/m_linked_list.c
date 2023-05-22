@@ -1,6 +1,5 @@
 #include "m_internal.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 LinkedList* milk_linked_list_new(size_t elementSize)

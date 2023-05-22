@@ -2,7 +2,7 @@
 #define WATCHMAN_INTERNAL
 #define WATCHMAN_EXPOSE_VA_LIST
 
-#include <slyertype.h>
+#include <delight.h>
 
 typedef void (*WatchmanStreamCallback)(char*);
 

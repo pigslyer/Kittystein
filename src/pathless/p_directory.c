@@ -1,6 +1,5 @@
 #include "p_internal.h"
 
-#include <stdlib.h>
 #include <dirent.h>
 #include <milk.h>
 

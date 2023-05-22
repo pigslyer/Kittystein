@@ -1,6 +1,5 @@
 #include "m_internal.h"
 
-#include <stdlib.h>
 #include <string.h>
 
 void* milk_util_shallow_copy_new(void* what, size_t length)

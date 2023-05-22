@@ -1,7 +1,7 @@
 #ifndef PATHLESS_H
 #define PATHLESS_H
 
-#include <slyertype.h>
+#include <delight.h>
 
 #ifndef PATHLESS_INTERNAL
 

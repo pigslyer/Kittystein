@@ -3,6 +3,8 @@
 
 #include <dirent.h>
 
+#include <delight.h>
+
 typedef struct
 {
 	DIR* dir;

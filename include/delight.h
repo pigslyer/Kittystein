@@ -1,8 +1,13 @@
-#ifndef SLYER_TYPE
-#define SLYER_TYPE
+#ifndef DELIGHT_H
+#define DELIGHT_H
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+
+#ifndef DELIGHT_INTERNAL
+
+#endif
 
 #define null NULL
 typedef unsigned int uint;

@@ -3,7 +3,7 @@
 #define FLOOFY_INTERNAL
 #define FLOOFY_EXPOSE_TEST_SUITE
 
-#include <slyertype.h>
+#include <delight.h>
 
 typedef void (*FloofyTestFunction)(void);
 

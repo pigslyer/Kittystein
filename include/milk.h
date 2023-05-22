@@ -12,7 +12,7 @@
 
 #ifndef MILK_H
 
-#include <slyertype.h>
+#include <delight.h>
 
 #ifndef MILK_INTERNAL
 
