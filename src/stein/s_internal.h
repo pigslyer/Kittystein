@@ -1,4 +1,4 @@
-#include <slyertype.h>
+#include <delight.h>
 
 #include <glad/glad.h>
 #define GLFW_INCLUDE_NONE

@@ -1,5 +1,4 @@
 #include "s_internal.h"
-#include <stdlib.h>
 
 GLFWwindow* mainWindow = NULL;
 
