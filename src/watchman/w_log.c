@@ -67,7 +67,7 @@ void watchman_log(W_LOG_TYPE type, const char* message, va_list args)
 	// casually stolen from https://www.w3schools.blog/c-get-time-in-milliseconds
 	struct timeval epochTime; 
 	gettimeofday(&epochTime, null);
-	long long milliseconds = epochTime.tv_sec*1000LL + epochTime.tv_usec/1000; // calculate milliseconds
+	long long microseconds = epochTime.tv_usec;
 	
 	long long sec = (long long) epochTime.tv_sec;
 	struct tm* info = localtime(&sec);
@@ -93,7 +93,7 @@ void watchman_log(W_LOG_TYPE type, const char* message, va_list args)
 	char buffer_header[4096];
 	char buffer_message[4096];
 
-	if (sprintf_s(buffer_header, sizeof buffer_header, "%s %02d:%02d:%02d.%lld: %s\n", log_type, info->tm_hour, info->tm_min, info->tm_sec, milliseconds, message) <= 0)
+	if (sprintf_s(buffer_header, sizeof buffer_header, "%s %02d:%02d:%02d.%06lld: %s\n", log_type, info->tm_hour, info->tm_min, info->tm_sec, microseconds, message) <= 0)
 	{
 		watchman_stream_push("CHARACTER BUFFER OVERRAN DURING HEADER GENERATION!\n");
 	} 
