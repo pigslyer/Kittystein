@@ -3,9 +3,6 @@
 
 #include <delight.h>
 
-void* milk_util_shallow_copy_new(void* what, size_t length);
-void milk_util_shallow_copy_free(void* what);
-
 
 struct LinkedListNode
 {

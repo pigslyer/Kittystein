@@ -14,7 +14,7 @@ LinkedList* milk_linked_list_new(size_t elementSize)
 void milk_linked_list_add_first(LinkedList* list, void* element)
 {
 	LinkedListNode* newNode = malloc(sizeof *newNode);
-	newNode->value = milk_util_shallow_copy_new(element, list->elementSize);
+	newNode->value = delight_memory_duplicate(element, list->elementSize);
 	newNode->next = list->first;
 	list->first = newNode;
 	list->count += 1;
@@ -27,7 +27,7 @@ void milk_linked_list_free(LinkedList* list)
 
 	while (cur != null)
 	{
-		milk_util_shallow_copy_free(cur->value);
+		free(cur->value);
 		next = cur->next;
 		free(cur);
 		cur = next;
@@ -36,7 +36,7 @@ void milk_linked_list_free(LinkedList* list)
 	free(list);
 }
 
-uint milk_linked_list_count(LinkedList* list)
+inline uint milk_linked_list_count(LinkedList* list)
 {
 	return list->count;
 }
