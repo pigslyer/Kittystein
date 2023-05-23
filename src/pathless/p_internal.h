@@ -7,8 +7,9 @@
 
 typedef struct
 {
-	DIR* dir;
-	struct dirent* contains;
+	char* 		pathToDir;
+	char** 		contains;
+	uint 		containsCount;
 } Directory;
 
 typedef struct

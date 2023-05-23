@@ -2,8 +2,9 @@
 
 #include <dirent.h>
 #include <milk.h>
+#include <watchman.h>
 
-Directory* pathless_directory_open(char* path)
+Directory* pathless_directory_open(const char* const path)
 {
 	DIR* d = opendir(path);
 
@@ -12,20 +13,43 @@ Directory* pathless_directory_open(char* path)
 		return null;
 	}
 
-	Directory* ret = malloc(sizeof *ret);
 	struct dirent* cur;
+	LinkedList* list = milk_linked_list_new(sizeof(char*));
 
-	LinkedList* list = milk_linked_list_new(sizeof *cur);
-
+	char* curString;
+	char* curName;
 	while ((cur = readdir(d)) != null)
 	{
-		milk_linked_list_add_first(list, cur);
+		curName = cur->d_name;
+		
+		if (!delight_string_equals(curName, ".") && !delight_string_equals(curName, ".."))
+		{
+			curString = (char*) delight_string_copy(curName);
+			milk_linked_list_add_first(list, &curString);
+		}
 	}
 
-	return null;
+	Directory* ret = malloc(sizeof *ret);
+
+	ret->pathToDir = delight_string_copy(path);
+	ret->contains = (char**) milk_linked_list_to_array(list);
+	ret->containsCount = milk_linked_list_count(list);
+
+	milk_linked_list_free(list);
+
+	return ret;
 }
 
 void pathless_directory_close(Directory* directory)
 {
-	closedir(directory->dir);
+	uint containsCount = directory->containsCount;
+
+	for (uint i = 0; i < containsCount; i++)
+	{
+		free(directory->contains[i]);
+	}
+
+	free(directory->contains);
+	free(directory->pathToDir);
+	free(directory);
 }
