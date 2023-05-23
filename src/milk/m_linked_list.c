@@ -45,7 +45,7 @@ void* milk_linked_list_to_array(LinkedList* list)
 {
 	size_t incAmount = list->elementSize;
 
-	byte* ret = (byte*) malloc(list->count * list->elementSize);
+	byte* ret = (byte*) malloc(list->count * incAmount);
 	byte* temp = ret;
 
 	for (LinkedListNode* cur = list->first; cur != null; cur = cur->next)
