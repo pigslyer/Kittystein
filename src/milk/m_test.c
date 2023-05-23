@@ -5,7 +5,7 @@
 
 static int testValues[] = {10, 20, 30, 40, 50, 60};
 
-FLOOFY_TEST_REGISTER(linked_list_test)
+FLOOFY_TEST_REGISTER(linked_list_test, true)
 
 void linked_list_test()
 {
