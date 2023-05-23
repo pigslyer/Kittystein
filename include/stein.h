@@ -1,3 +1,8 @@
+/*
+* 
+* Named after Wolfenstein.
+* */
+
 #ifndef STEIN_H
 #define STEIN_H
 

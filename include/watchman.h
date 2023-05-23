@@ -7,6 +7,8 @@
 * to expose log_v variants of the 3 log methods.
 * 
 * Macros also automatically insert line number and file at the start of the message.
+* 
+* Named after the Watchmen comic.
 * */
 
 #ifndef WATCHMAN_H

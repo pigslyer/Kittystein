@@ -7,7 +7,10 @@
 * These values should NOT be freed.
 * All to_array functions defined by Milk will return a shallow copy of the internal values, however. 
 * These arrays SHOULD be freed manually.
+* Any to_immutable_array functions return an internal array. This array may be modified over time and modifications to it will result 
+* in the milk collection to change.
 * 
+* Named after Milk outside a bag of milk (https://store.steampowered.com/app/1604000/Milk_outside_a_bag_of_milk_outside_a_bag_of_milk/)
 * */
 
 #ifndef MILK_H
