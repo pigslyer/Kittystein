@@ -33,7 +33,7 @@ linkingFlags = config["build"]["linkingFlags"]
 linkedLibs = config["build"]["linkedLibs"]
 
 ignoreCompilerFail = False
-
+autoRunExe = True
 
 def makeDirIfNotExisting(path: str):
 	if (not os.path.isdir(path)):
@@ -43,6 +43,7 @@ def makeDirIfNotExisting(path: str):
 args = argparse.ArgumentParser()
 args.add_argument("-re", "--rebuild", help="rebuilds entire project", action="store_true")
 args.add_argument("--ignore-comp-fail", help="runs old target if there were compiler errors", action="store_true")
+args.add_argument("-norun", help="builds and links exe, but does not automatically run it", action="store_true")
 
 parsed = args.parse_args()
 
@@ -60,6 +61,9 @@ if (parsed.rebuild):
 
 if (parsed.ignore_comp_fail):
 	ignoreCompilerFail = True
+
+if (parsed.norun):
+	autoRunExe = False
 
 # make build directory if it doesn't exist
 makeDirIfNotExisting(rootdir + build)
@@ -149,12 +153,8 @@ for section in config.sections():
 				objectFiles.append(f"{build}{file}.o")
 
 
-if compilationFailed and not ignoreCompilerFail:
-	print(f"compilation failed, not running {target}. use --ignore-comp-fail if you want to run anyway")
-	exit(1)
-
-elif compilationFailed:
-	print(f"compilation failed, running {target} anyway")
+if compilationFailed:
+	print(f"compilation failed!")
 
 elif (compiledAnything or not os.path.isfile(f"{rootdir}/{target}")):
 	# linking step
@@ -166,10 +166,17 @@ elif (compiledAnything or not os.path.isfile(f"{rootdir}/{target}")):
 
 	os.system(f"{compiler} -o {target} {linking} {linkedLibs} {linkingFlags}")
 
-	print(f"executable built, running {target}")
+	print(f"executable built!")
 
 else:
-	print(f"executable up to date, running {target}")
+	print(f"executable up to date!")
+
 
 # run the thing
-os.system(f"\"{os.path.join(rootdir, target)}\"")
+if autoRunExe and (ignoreCompilerFail or not compilationFailed):
+	print(f"running {target}")
+	os.system(f"\"{os.path.join(rootdir, target)}\"")
+
+elif autoRunExe and compilationFailed:
+	print(f"not running {target}. use --ignore-comp-fail if you want to run anyway")
+	exit(1)
