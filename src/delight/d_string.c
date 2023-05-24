@@ -1,7 +1,5 @@
 #include "d_internal.h"
 
-#include <string.h>
-
 char* delight_string_copy(const char* const sourceString)
 {
 	size_t length = delight_string_length(sourceString);
