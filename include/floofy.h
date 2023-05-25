@@ -53,16 +53,16 @@ void floofy_test_assert(bool condition, const char* const error, ...);
 void floofy_test_assert_full(const char* const file, const uint line, bool value, const char* const error, ...);
 
 
-#define FLOOFY_TEST_REGISTER(test_func_name, enable)																					\
-	static void test_func_name(void);																									\
-	static void _##test_func_name##_register(void) __attribute__((constructor));														\
-	void _##test_func_name##_register(void) { if (enable) floofy_test_function_full(test_func_name, __FILE__, __LINE__, #test_func_name); }
+#define FLOOFY_TEST_REGISTER(test_func_name, enable)																															\
+	static void test_func_name(void);																																			\
+	static void _##test_func_name##_register(void) __attribute__((constructor));																								\
+	void _##test_func_name##_register(void) { if (enable) floofy_test_function_full(test_func_name, _delight_string_make_relative_to_src(__FILE__), __LINE__, #test_func_name); }
 
-#define FLOOFY_TEST_ASSERT(condition, error)									\
-	floofy_test_assert_full(__FILE__, __LINE__, condition, error)
+#define FLOOFY_TEST_ASSERT(condition, error)														\
+	floofy_test_assert_full(_delight_string_make_relative_to_src(__FILE__), __LINE__, condition, error)
 
-#define FLOOFY_TEST_ASSERT_ARG(condition, error, ...)							\
-	floofy_test_assert_full(__FILE__, __LINE__, condition, error, __VA_ARGS__)
+#define FLOOFY_TEST_ASSERT_ARG(condition, error, ...)																\
+	floofy_test_assert_full(_delight_string_make_relative_to_src(__FILE__), __LINE__, condition, error, __VA_ARGS__)
 
 #endif
 

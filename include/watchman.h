@@ -14,6 +14,8 @@
 #ifndef WATCHMAN_H
 #define WATCHMAN_H
 
+#include <delight.h>
+
 #ifndef WATCHMAN_INTERNAL
 
 typedef void (*WatchmanStreamCallback)(char*);
@@ -32,14 +34,14 @@ void watchman_log_warning(const char* message, ...);
 /// @param message The intended message.
 void watchman_log_message(const char* message, ...);
 
-#define WATCHMAN_LOG_ERROR_ARG(message, ...) 	watchman_log_error("{"__FILE__":%d} "message, __LINE__, __VA_ARGS__)
-#define WATCHMAN_LOG_ERROR(message) 			watchman_log_error("{"__FILE__":%d} "message, __LINE__)
+#define WATCHMAN_LOG_ERROR_ARG(message, ...) 	watchman_log_error("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__, __VA_ARGS__)
+#define WATCHMAN_LOG_ERROR(message) 			watchman_log_error("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 
-#define WATCHMAN_LOG_WARNING_ARG(message, ...) 	watchman_log_warning("{"__FILE__":%d} "message, __LINE__, __VA_ARGS__)
-#define WATCHMAN_LOG_WARNING(message) 			watchman_log_warning("{"__FILE__":%d} "message, __LINE__)
+#define WATCHMAN_LOG_WARNING_ARG(message, ...) 	watchman_log_warning("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__, __VA_ARGS__)
+#define WATCHMAN_LOG_WARNING(message) 			watchman_log_warning("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 
-#define WATCHMAN_LOG_MESSAGE_ARG(message, ...) 	watchman_log_message("{"__FILE__":%d} "message, __LINE__, __VA_ARGS__)
-#define WATCHMAN_LOG_MESSAGE(message) 			watchman_log_message("{"__FILE__":%d} "message, __LINE__)
+#define WATCHMAN_LOG_MESSAGE_ARG(message, ...) 	watchman_log_message("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__, __VA_ARGS__)
+#define WATCHMAN_LOG_MESSAGE(message) 			watchman_log_message("{./%s:%d} "message, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 
 /// @brief Sets the output stream watchman uses for all messages.
 /// @param callback The function that should be called with all messages.
