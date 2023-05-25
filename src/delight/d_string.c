@@ -70,3 +70,21 @@ bool delight_string_equals(const char* const string1, const char* const string2)
 
 	return string1[i] == string2[i];
 }
+
+const char* const _delight_string_make_relative_to_src(char* const string)
+{
+	if (string[0] == '\0' || string[1] == '\0')
+	{
+		return null;
+	}
+
+	for (size_t i = 0; string[i + 2] != '\0'; i++)
+	{
+		if (string[i + 0] == 's' && string[i + 1] == 'r' && string[i + 2] == 'c')
+		{
+			return string + i;
+		}
+	}
+
+	return null;
+}
