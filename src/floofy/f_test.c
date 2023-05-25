@@ -49,7 +49,7 @@ void floofy_test_run()
 
 			if (curTest->functionName != null)
 			{
-				watchman_log_message("Floofy test \"%s\" completed successfully! Location: {%s:%d}", curTest->functionName, curTest->filePath, curTest->lineNumber);
+				watchman_log_message("Floofy test \"%s\" completed successfully! Location: {./%s:%d}", curTest->functionName, curTest->filePath, curTest->lineNumber);
 			}
 			else
 			{
@@ -61,7 +61,7 @@ void floofy_test_run()
 
 			if (curTest->functionName != null)
 			{
-				watchman_log_warning("Floofy test \"%s\" failed! Location: {%s:%d}", curTest->functionName, curTest->filePath, curTest->lineNumber);
+				watchman_log_warning("Floofy test \"%s\" failed! Location: {./%s:%d}", curTest->functionName, curTest->filePath, curTest->lineNumber);
 			}
 			else
 			{
