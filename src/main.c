@@ -2,4 +2,5 @@
 
 int main(void)
 {
+	floofy_test_run();
 }
