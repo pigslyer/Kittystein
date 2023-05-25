@@ -20,27 +20,26 @@ bool delight_memory_equals(const void* buffer1, const void* buffer2, const size_
 	return memcmp(buffer1, buffer2, size) == 0;
 }
 
-const size_t usedMemoryCountIncrement = 1024;
-MemoryAllocation* usedMemory;
+static const size_t usedMemoryCountIncrement = 1024;
+static MemoryAllocation* usedMemory;
 
-size_t usedMemoryLength;
-ulong usedMemoryCount;
+static size_t usedMemoryLength;
+static ulong usedMemoryCount;
 
-size_t allocatedMemory;
+static size_t allocatedMemory;
 
 
-void delight_memory_used_memory_resize(void);
+static void delight_memory_used_memory_resize(void);
 
 
 #define DELIGHT_MEMORY_DEBUG_TOOLS
 #define DELIGHT_MEMORY_TRACKER
 #include <delight.h>
 
-inline void delight_memory_usage_report(MemoryAllocation** const allocations, ulong* allocationCount, size_t* totalAllocatedMemory)
-{
-	if (allocations && allocationCount)
+void delight_memory_usage_report(ulong* allocationCount, size_t* totalAllocatedMemory)
+{	
+	if (allocationCount)
 	{
-		*allocations = usedMemory;
 		*allocationCount = usedMemoryCount;
 	}
 
@@ -51,20 +50,20 @@ inline void delight_memory_usage_report(MemoryAllocation** const allocations, ul
 }
 
 
-void delight_memory_usage_request_location(const MemoryAllocation* allocation, const char * * const file, uint* line)
+void delight_memory_usage_request_location(const ulong allocation, const char * * const file, uint* line)
 {
-	*file = allocation->requestLocation;
-	*line = allocation->requestLine;
+	*file = usedMemory[allocation].requestLocation;
+	*line = usedMemory[allocation].requestLine;
 }
 
-inline size_t delight_memory_usage_allocation_amount(const MemoryAllocation* allocation)
+size_t delight_memory_usage_allocation_amount(const ulong allocation)
 {
-	return allocation->allocationAmount;
+	return usedMemory[allocation].allocationAmount;
 }
 
-inline void* delight_memory_usage_allocation_location(const MemoryAllocation* allocation)
+void* delight_memory_usage_allocation_location(const ulong allocation)
 {
-	return allocation->allocationLocation;
+	return usedMemory[allocation].allocationLocation;
 }
 
 // currently none of this is thread safe!

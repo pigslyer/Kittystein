@@ -21,8 +21,6 @@ typedef unsigned char byte;
 
 #ifndef DELIGHT_INTERNAL
 
-typedef void MemoryAllocation;
-
 #endif
 
 /// @brief Copies first size contents of sourceBuffer to newly allocated memory, returning the pointer to it. 
@@ -104,26 +102,25 @@ void			_delight_memory_free(void* what, const char* const file, const uint line)
 
 #ifndef _DELIGHT_MEMORY_DEBUG_TOOLS
 /// @brief Passes along an array to every MemoryAllocation, alongside the current total allocated memory.
-/// @param allocations An array to all memory allocation objects.
-/// @param allocationCount The length of the allocations array.
+/// @param allocationCount The number of active allocations.
 /// @param totalAllocatedMemory The total amount of memory allocated by all functions.
-void				delight_memory_usage_report(MemoryAllocation** const allocations, ulong* allocationCount, size_t* totalAllocatedMemory);
+void				delight_memory_usage_report(ulong* allocationCount, size_t* totalAllocatedMemory);
 
 /// @brief Requests the location where a certain block of memory was allocated.
 /// @param allocation The allocation we're querying.
 /// @param file The file from which the allocation was made.
 /// @param line The line on which the allocation was made.
-void				delight_memory_usage_request_location(const MemoryAllocation* allocation, const char* * const file, uint* line);
+void				delight_memory_usage_request_location(const ulong allocation, const char* * const file, uint* line);
 
 /// @brief Requests the amount of memory this allocation takes.
 /// @param allocation The allocation we're querying.
 /// @return The amount of space that allocation takes.
-size_t				delight_memory_usage_allocation_amount(const MemoryAllocation* allocation);
+size_t				delight_memory_usage_allocation_amount(const ulong allocation);
 
 /// @brief Requests the location in memory of the current allocation. Using this memory is obviously dangerous.
 /// @param allocation The allocation we're querying.
 /// @return The location in memory where this allocation is located.
-void*				delight_memory_usage_allocation_location(const MemoryAllocation* allocation);
+void*				delight_memory_usage_allocation_location(const ulong allocation);
 
 #endif
 
