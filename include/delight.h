@@ -75,7 +75,7 @@ bool					delight_string_equals(const char* const string1, const char* const stri
 /// @brief Returns the character in the passed string where "src" first occurs or null if the string is too short or doesn't contain "src". The string returned by this function should not be freed, rather the passed argument should be.
 /// @param string The filepath, probably aquired from __FILE__.
 /// @return A pointer to the character in the string where "src" begins or NULL on failure.
-const char* const		_delight_string_make_relative_to_src(char* const string);
+char*		_delight_string_make_relative_to_src(char* string);
 
 #endif
 
@@ -84,10 +84,10 @@ const char* const		_delight_string_make_relative_to_src(char* const string);
 // enabling places macros over malloc, realloc, calloc and free. these should always be defined on the compiler level!
 #ifdef DELIGHT_MEMORY_TRACKER
 
-void*			_delight_memory_malloc(const size_t amount, const char* const file, const uint line);
-void*			_delight_memory_calloc(const size_t elementCount, const size_t elementSize, const char* const file, const uint line);
-void*			_delight_memory_realloc(void* orgBuffer, const size_t amount, const char* const file, const uint line);
-void			_delight_memory_free(void* what, const char* const file, const uint line);
+void*			_delight_memory_malloc(const size_t amount, char* file, uint line);
+void*			_delight_memory_calloc(const size_t elementCount, const size_t elementSize, char* file, uint line);
+void*			_delight_memory_realloc(void* orgBuffer, const size_t amount, char* file, uint line);
+void			_delight_memory_free(void* what, char* const file, const uint line);
 
 #define malloc(size) 				_delight_memory_malloc(size, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 #define calloc(elementCount, size)	_delight_memory_calloc(elementCount, size, _delight_string_make_relative_to_src(__FILE__), __LINE__)
