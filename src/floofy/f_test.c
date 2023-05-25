@@ -1,3 +1,4 @@
+#define DELIGHT_MEMORY_DEBUG_TOOLS
 #include "f_internal.h"
 
 #include <stdio.h>
@@ -29,6 +30,9 @@ uint floofyTestFailures;
 
 void floofy_test_run()
 {
+	size_t preAlloc, postAlloc;
+	delight_memory_usage_report(null, &preAlloc);
+
 	FloofyTest* curTest;
 
 	floofyTestCount = 0;
@@ -73,7 +77,20 @@ void floofy_test_run()
 		totalFailures += floofyTestFailures;
 	}
 
-	WATCHMAN_LOG_MESSAGE_ARG("All %d registered test functions have been run by Floofy. %d out of %d tests were successful!", floofyFunctionCount, totalTests - totalFailures, totalTests);
+	watchman_log_message("All %d registered test functions have been run by Floofy. %d out of %d tests were successful!", floofyFunctionCount, totalTests - totalFailures, totalTests);
+
+	delight_memory_usage_report(null, &postAlloc);
+
+	if (preAlloc != postAlloc)
+	{
+		watchman_log_error("There is a memory leak somewhere in the tests!");
+	}
+	else
+	{
+#ifdef DELIGHT_MEMORY_TRACKER
+		watchman_log_message("No memory was leaked!");
+#endif
+	}
 }
 
 void floofy_test_assert(bool value, const char* const error, ...)
