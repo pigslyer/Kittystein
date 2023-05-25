@@ -41,7 +41,9 @@ void delight_string_test()
 
 }
 
+#ifndef DELIGHT_MEMORY_TRACKER
 #define DELIGHT_MEMORY_TRACKER
+#endif
 #define DELIGHT_MEMORY_DEBUG_TOOLS
 #include <delight.h>
 
