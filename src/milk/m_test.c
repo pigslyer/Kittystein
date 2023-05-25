@@ -3,12 +3,12 @@
 #define FLOOFY_EXPOSE_TEST_SUITE
 #include <floofy.h>
 
-static int testValues[] = {10, 20, 30, 40, 50, 60};
-
 FLOOFY_TEST_REGISTER(linked_list_test, true)
 
 void linked_list_test()
 {
+	int testValues[] = {10, 20, 30, 40, 50, 60};
+	
 	int tempInt;
 	int* tempIntPtr;
 	LinkedListNode* tempNode;
@@ -43,25 +43,49 @@ void linked_list_test()
 
 	tempNode = milk_linked_list_iterate(list);
 
-	for (int i = listLength - 1; i >= 0; i--)
 	{
-		FLOOFY_TEST_ASSERT_ARG(tempNode != null, "Ran out of nodes at index %d!", i);
+		int firstWrong = -1;
+		bool anyWrong = false;
 		
-		tempInt = *(int*)milk_linked_list_node_value(tempNode);
+		for (int i = listLength - 1; i >= 0; i--)
+		{
+			FLOOFY_TEST_ASSERT_ARG(tempNode != null, "Ran out of nodes at index %d!", i);
+			
+			tempInt = *(int*)milk_linked_list_node_value(tempNode);
+			
+			if (!anyWrong && tempInt != testValues[i])
+			{
+				firstWrong = i;
+				anyWrong = true;
+			}
+
+			tempNode = milk_linked_list_node_next(tempNode);
+		}
 		
-		FLOOFY_TEST_ASSERT_ARG(tempInt == testValues[i], "Reading linked list in reverse adding order doesn't yield equal values at index %d; read value: %d, expected value: %d!", i, tempInt, testValues[i]);
+		FLOOFY_TEST_ASSERT_ARG(!anyWrong, "Reading linked list in reverse adding order doesn't yield equal values at index %d!", firstWrong);
 		
-		tempNode = milk_linked_list_node_next(tempNode);
 	}
 
 	FLOOFY_TEST_ASSERT(tempNode == null, "Too many nodes in list!");
 
 	int* arr = (int*) milk_linked_list_to_array(list);
 
-	for (uint i = 0; i < listLength; i++)
 	{
-		FLOOFY_TEST_ASSERT_ARG(arr[i] == testValues[listLength - 1 - i], "Values in array aren't equal! Array: %d, Original: %d!", arr[i], testValues[listLength - 1 - i]);
+		int firstWrong = -1;
+		bool anyWrong = false;
+
+		for (uint i = 0; i < listLength; i++)
+		{
+			if (!anyWrong && arr[i] != testValues[listLength - 1 - i])
+			{
+				anyWrong = true;
+				firstWrong = i;
+			}
+		}
+
+		FLOOFY_TEST_ASSERT_ARG(!anyWrong, "Values in array aren't equal! Array: %d, Original: %d!", arr[firstWrong], testValues[firstWrong]);
 	}
+	
 
 	free(arr);
 	milk_linked_list_free(list);
