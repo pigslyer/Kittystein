@@ -103,7 +103,7 @@ void floofy_test_assert_full(const char* const file, const uint line, bool value
 
 		char buffer[4096];
 		
-		if (sprintf_s(buffer, sizeof buffer, "{%s:%d} - %s", file, line, error) > 0)
+		if (sprintf_s(buffer, sizeof buffer, "{./%s:%d} - %s", file, line, error) > 0)
 		{
 			va_list args;
 			va_start(args, error);
@@ -114,7 +114,7 @@ void floofy_test_assert_full(const char* const file, const uint line, bool value
 		}
 		else
 		{
-			watchman_log_error("Unit test error ocurred in %s on line %d, message overflowed.");
+			watchman_log_error("Unit test error ocurred in ./%s on line %d, message overflowed.");
 		}
 	}
 }
