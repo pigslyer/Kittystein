@@ -2,7 +2,6 @@
 
 #include <dirent.h>
 #include <milk.h>
-#include <watchman.h>
 
 Directory* pathless_directory_open(const char* const path)
 {
@@ -13,6 +12,17 @@ Directory* pathless_directory_open(const char* const path)
 		return null;
 	}
 
+	char* pathWithSlash;
+	if (path[delight_string_length(path)] != '/')
+	{
+		pathWithSlash = delight_string_concat(path, "/");
+	}
+	else
+	{
+		pathWithSlash = delight_string_copy(path);
+	}
+	
+
 	struct dirent* cur;
 	LinkedList* list = milk_linked_list_new(sizeof(char*));
 
@@ -21,10 +31,9 @@ Directory* pathless_directory_open(const char* const path)
 	while ((cur = readdir(d)) != null)
 	{
 		curName = cur->d_name;
-		
 		if (!delight_string_equals(curName, ".") && !delight_string_equals(curName, ".."))
 		{
-			curString = (char*) delight_string_copy(curName);
+			curString = (char*) delight_string_concat(pathWithSlash, curName);
 			milk_linked_list_add_first(list, &curString);
 		}
 	}
@@ -36,6 +45,7 @@ Directory* pathless_directory_open(const char* const path)
 	ret->containsCount = milk_linked_list_count(list);
 
 	milk_linked_list_free(list);
+	free(pathWithSlash);
 
 	return ret;
 }
@@ -52,4 +62,9 @@ void pathless_directory_close(Directory* directory)
 	free(directory->contains);
 	free(directory->pathToDir);
 	free(directory);
+}
+
+const char* const * const pathless_directory_ls(Directory* directory)
+{
+	return (const char* const * const) directory->contains;
 }

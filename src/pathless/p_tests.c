@@ -23,7 +23,9 @@ void pathless_directory_test()
 	uint count = dir->containsCount;
 
 	const char* const expectedContents[] = {
-		"file1", "folder1", "folder2"
+		"./src/pathless/p_tests_root/file1.f", 
+		"./src/pathless/p_tests_root/folder1", 
+		"./src/pathless/p_tests_root/folder2",
 	};
 
 	const uint expectedLength = sizeof(expectedContents) / sizeof(*expectedContents);
@@ -48,3 +50,4 @@ void pathless_directory_test()
 
 	pathless_directory_close(dir);
 }
+
