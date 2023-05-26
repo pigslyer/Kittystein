@@ -12,10 +12,22 @@ typedef struct
 	uint 		containsCount;
 } Directory;
 
-typedef struct
+struct IterationFile
 {
-	int a;
-} IterationFile;
+	struct IterationFile* currentFileIterator;
+	Directory* currentDirectory;
+	int currentFileIndex;
+
+	bool recursive;
+	bool allowsDirs;
+	
+	uint excludingCount;
+	char** excludingExtensions;
+};
+
+typedef struct IterationFile IterationFile;
+
+bool pathless_path_is_dir(const char* const path);
 
 #include <pathless.h>
 
