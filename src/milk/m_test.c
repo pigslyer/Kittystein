@@ -3,9 +3,9 @@
 #define FLOOFY_EXPOSE_TEST_SUITE
 #include <floofy.h>
 
-FLOOFY_TEST_REGISTER(linked_list_test, true)
+FLOOFY_TEST_REGISTER(milk_linked_list_test, true)
 
-void linked_list_test()
+void milk_linked_list_test()
 {
 	int testValues[] = {10, 20, 30, 40, 50, 60};
 	

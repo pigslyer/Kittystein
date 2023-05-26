@@ -3,9 +3,9 @@
 #define FLOOFY_EXPOSE_TEST_SUITE
 #include <floofy.h>
 
-FLOOFY_TEST_REGISTER(directory_test, true)
+FLOOFY_TEST_REGISTER(pathless_directory_test, true)
 
-void directory_test()
+void pathless_directory_test()
 {
 	Directory* dir;
 
