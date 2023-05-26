@@ -39,6 +39,13 @@ void delight_string_test()
 
 	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(_delight_string_make_relative_to_src(__FILE__), relativePath), "Relative path (%s) was not calculated properly! Got: %s", relativePath, copy);
 
+	FLOOFY_TEST_ASSERT(delight_string_ends_with(string, string), "String does not end with itself!");
+
+	FLOOFY_TEST_ASSERT(delight_string_ends_with(string, "ld!"), "String ends does not work properly!");
+	FLOOFY_TEST_ASSERT(!delight_string_ends_with(string, "old"), "String ends does not work properly!");
+	
+
+	FLOOFY_TEST_ASSERT(delight_string_ends_with(string, ""), "String should always end with an empty string!");
 }
 
 #ifndef DELIGHT_MEMORY_TRACKER

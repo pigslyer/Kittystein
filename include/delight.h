@@ -19,6 +19,13 @@ typedef uint64_t ulong;
 typedef unsigned int uint;
 typedef unsigned char byte;
 
+typedef enum
+{
+	UsageReqNever,
+	UsageReqOptional,
+	UsageReqRequired,
+} UsageReq;
+
 #ifndef DELIGHT_INTERNAL
 
 #endif
@@ -70,12 +77,18 @@ size_t 					delight_string_length(const char* const string);
 /// @return True if the contents of both strings are equal and they have the same length.
 bool					delight_string_equals(const char* const string1, const char* const string2);
 
+bool					delight_string_ends_with(const char* const string, const char* const suffix);
+
 
 // tried making a macro for calling this, C didn't like it.
 /// @brief Returns the character in the passed string where "src" first occurs or null if the string is too short or doesn't contain "src". The string returned by this function should not be freed, rather the passed argument should be.
 /// @param string The filepath, probably aquired from __FILE__.
 /// @return A pointer to the character in the string where "src" begins or NULL on failure.
-char*		_delight_string_make_relative_to_src(char* string);
+char*					_delight_string_make_relative_to_src(char* string);
+
+
+bool					delight_enum_usage_req_eval(UsageReq req, bool value);
+
 
 #endif
 

@@ -97,3 +97,11 @@ char* _delight_string_make_relative_to_src(char* string)
 
 	return null;
 }
+
+bool delight_string_ends_with(const char* const string, const char* const suffix)
+{
+	size_t str_len = delight_string_length(string);
+	size_t suffix_len = delight_string_length(suffix);
+
+	return delight_memory_equals(string + str_len - suffix_len, suffix, suffix_len);
+}
