@@ -71,18 +71,27 @@ bool delight_string_equals(const char* const string1, const char* const string2)
 	return string1[i] == string2[i];
 }
 
-const char* const _delight_string_make_relative_to_src(char* const string)
+char* _delight_string_make_relative_to_src(char* string)
 {
+
 	if (string[0] == '\0' || string[1] == '\0')
 	{
 		return null;
 	}
+	
+	// for every binary wholly compiled on one system, the relative path's prefix will be the same, so we can reuse it and save ourselves the linear search for "src"
+	static size_t lookup = 0;
 
-	for (size_t i = 0; string[i + 2] != '\0'; i++)
+	if (lookup != 0)
 	{
-		if (string[i + 0] == 's' && string[i + 1] == 'r' && string[i + 2] == 'c')
+		return string + lookup;
+	}
+
+	for (lookup = 0; string[lookup + 2] != '\0'; lookup++)
+	{
+		if (string[lookup + 0] == 's' && string[lookup + 1] == 'r' && string[lookup + 2] == 'c')
 		{
-			return string + i;
+			return string + lookup;
 		}
 	}
 
