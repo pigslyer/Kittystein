@@ -19,7 +19,7 @@ typedef void Directory;
 #endif
 
 
-IterationFile* 					pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, char** excludeExtensions, uint exclusionCount);
+IterationFile* 					pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, char** onlyExtensions, uint extensionCount);
 void 							pathless_iterate_end(IterationFile* state);
 
 const char* const				pathless_iterate_get_current(IterationFile* state);

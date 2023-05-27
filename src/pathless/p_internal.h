@@ -21,8 +21,8 @@ struct IterationFile
 	bool recursive;
 	bool allowsDirs;
 	
-	uint excludingCount;
-	char** excludingExtensions;
+	uint includingCount;
+	char** includingExtensions;
 };
 
 typedef struct IterationFile IterationFile;

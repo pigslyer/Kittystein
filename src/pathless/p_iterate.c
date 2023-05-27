@@ -1,7 +1,7 @@
 #include "p_internal.h"
 
 
-IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, char** excludeExtensions, uint excludeCount)
+IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, char** onlyExtensions, uint includeCount)
 {
 	IterationFile* ret = malloc(sizeof(IterationFile));
 
@@ -12,9 +12,17 @@ IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bo
 	ret->recursive = recursive;
 	ret->allowsDirs = allowDirs;
 
-	ret->excludingCount = excludeCount;
-	ret->excludingExtensions = delight_memory_duplicate(excludeExtensions, excludeCount * sizeof *excludeExtensions);
-
+	if (onlyExtensions)
+	{
+		ret->includingCount = includeCount;
+		ret->includingExtensions = delight_memory_duplicate(onlyExtensions, includeCount * sizeof *onlyExtensions);
+	}
+	else
+	{
+		ret->includingCount = 0;
+		ret->includingExtensions = null;
+	}
+	
 	return ret;
 }
 
@@ -25,8 +33,13 @@ void pathless_iterate_end(IterationFile* file)
 		pathless_iterate_end(file);
 	}
 
+	if (file->includingExtensions)
+	{
+		free(file->includingExtensions);
+	}
+
 	pathless_directory_close(file->currentDirectory);
-	free(file->excludingExtensions);
+	//free(file);
 }
 
 
@@ -62,13 +75,13 @@ bool pathless_iterate_next(IterationFile* file)
 		file->currentFileIterator = null;
 	}
 	// if we're allowing dirs we may have moved to a directory in the last step and not yet opened it to signify we have to move through it too
-	else if (file->recursive && file->allowsDirs)
+	else if (file->currentFileIndex >= 0 && file->recursive && file->allowsDirs)
 	{
 		curPath = curDir->contains[file->currentFileIndex];
 
 		if (pathless_path_is_dir(curPath))
 		{
-			file->currentFileIterator = pathless_iterate_begin(curPath, true, true, file->excludingExtensions, file->excludingCount);
+			file->currentFileIterator = pathless_iterate_begin(curPath, true, true, file->includingExtensions, file->includingCount);
 			
 			if (pathless_iterate_next(file->currentFileIterator))
 			{
@@ -98,7 +111,7 @@ bool pathless_iterate_next(IterationFile* file)
 			return true;
 		}
 
-		file->currentFileIterator = pathless_iterate_begin(curPath, true, false, file->excludingExtensions, file->excludingCount);
+		file->currentFileIterator = pathless_iterate_begin(curPath, true, false, file->includingExtensions, file->includingCount);
 		
 		if (pathless_iterate_next(file->currentFileIterator))
 		{
@@ -109,9 +122,14 @@ bool pathless_iterate_next(IterationFile* file)
 		file->currentFileIterator = null;
 	}
 
-	for (uint i = 0; i < file->excludingCount; i++)
+	if (pathless_path_is_dir(curPath) && !file->recursive && !file->allowsDirs)
 	{
-		if (delight_string_ends_with(curPath, file->excludingExtensions[i]))
+		return pathless_iterate_next(file);
+	}
+
+	for (uint i = 0; i < file->includingCount; i++)
+	{
+		if (delight_string_ends_with(curPath, file->includingExtensions[i]))
 		{
 			return true;
 		}
