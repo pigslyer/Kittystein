@@ -22,7 +22,7 @@ struct IterationFile
 	bool allowsDirs;
 	
 	uint includingCount;
-	char** includingExtensions;
+	const char** includingExtensions;
 };
 
 typedef struct IterationFile IterationFile;

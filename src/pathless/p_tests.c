@@ -60,7 +60,7 @@ void floofy_iteration_file_test()
 	{
 		bool recursive;
 		bool includeFolders;
-		char* includedFolders[20];
+		const char* includedFolders[20];
 		char* expectedResults[20];
 	};
 
@@ -229,6 +229,20 @@ void floofy_iteration_file_test()
 				"./src/pathless/p_tests_root/folder2/folder2file1.f",
 				null,
 			}
+		},
+		// 11 -------------------------------
+		// .f files and all folders, no recursion
+		{
+			false, true,
+			{
+				".f",
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1",
+				"./src/pathless/p_tests_root/folder2",
+				null,
+			}
 		}
 	};
 
@@ -244,6 +258,8 @@ void floofy_iteration_file_test()
 		{ }
 
 		file = pathless_iterate_begin("./src/pathless/p_tests_root", cur->recursive, cur->includeFolders, cur->includedFolders, inclusionCount);
+
+		FLOOFY_TEST_ASSERT(file, "Could not open iterator!");
 
 		uint total;
 		uint countTooMany = 0;

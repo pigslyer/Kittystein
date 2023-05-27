@@ -5,23 +5,29 @@
 
 Directory* pathless_directory_open(const char* const path)
 {
-	DIR* d = opendir(path);
-
-	if (!d)
-	{
-		return null;
-	}
-
 	char* pathWithSlash;
+	char* pathWithoutSlash;
 	if (path[delight_string_length(path)] != '/')
 	{
 		pathWithSlash = delight_string_concat(path, "/");
+		pathWithoutSlash = delight_string_copy(path);
 	}
 	else
 	{
 		pathWithSlash = delight_string_copy(path);
+
+		pathWithoutSlash = delight_string_copy(path);
+		pathWithoutSlash[delight_string_length(pathWithoutSlash)] = '\0';
 	}
-	
+
+	DIR* d = opendir(pathWithoutSlash);
+
+	if (!d)
+	{
+		free(pathWithSlash);
+		free(pathWithoutSlash);
+		return null;
+	}
 
 	struct dirent* cur;
 	LinkedList* list = milk_linked_list_new(sizeof(char*));
@@ -46,6 +52,7 @@ Directory* pathless_directory_open(const char* const path)
 
 	milk_linked_list_free(list);
 	free(pathWithSlash);
+	free(pathWithoutSlash);
 
 	return ret;
 }
@@ -64,7 +71,8 @@ void pathless_directory_close(Directory* directory)
 	free(directory);
 }
 
-const char* const * const pathless_directory_ls(Directory* directory)
+const char* const * const pathless_directory_ls(Directory* directory, uint* containsCount)
 {
+	*containsCount = directory->containsCount;
 	return (const char* const * const) directory->contains;
 }
