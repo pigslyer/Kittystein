@@ -30,8 +30,9 @@ uint floofyTestFailures;
 
 void floofy_test_run()
 {
+	ulong preAllocCount, postAllocCount;
 	size_t preAlloc, postAlloc;
-	delight_memory_usage_report(null, &preAlloc);
+	delight_memory_usage_report(&preAllocCount, &preAlloc);
 
 	FloofyTest* curTest;
 
@@ -79,11 +80,24 @@ void floofy_test_run()
 
 	watchman_log_message("All %d registered test functions have been run by Floofy. %d out of %d tests were successful!", floofyFunctionCount, totalTests - totalFailures, totalTests);
 
-	delight_memory_usage_report(null, &postAlloc);
+	delight_memory_usage_report(&postAllocCount, &postAlloc);
 
 	if (preAlloc != postAlloc)
 	{
-		watchman_log_error("There is a memory leak somewhere in the tests!");
+		watchman_log_error("There is a memory leak somewhere in the tests! Total leaked memory: %lld bytes", postAlloc - preAlloc);
+		watchman_log_message("Performing memory dump:");
+
+
+		const char* locationFile;
+		uint locationLine;
+		size_t amount;
+		for (ulong i = preAllocCount; i < postAllocCount; i++)
+		{
+			delight_memory_usage_request_location(i, &locationFile, &locationLine);
+			amount = delight_memory_usage_allocation_amount(i);
+
+			watchman_log_message("Allocation % 3lld: Reserved % 6lld bytes at {./%s:%d}.", i - preAllocCount, amount, locationFile, locationLine);
+		}
 	}
 	else
 	{
