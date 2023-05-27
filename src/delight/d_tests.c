@@ -170,7 +170,7 @@ void delight_memory_test()
 
 		for (size_t i = 0; i < allocationCount; i++)
 		{
-			if (!anyWrong && delight_memory_usage_allocation_amount(i) != singleAllocationAmount + i)
+			if (!anyWrong && delight_memory_usage_allocation_amount(i + startingAllocCount) != singleAllocationAmount + i)
 			{
 				anyWrong = true;
 			}
@@ -183,7 +183,7 @@ void delight_memory_test()
 
 		for (size_t i = 0; i < allocationCount; i++)
 		{
-			if (!anyWrong && delight_memory_usage_allocation_location(i) != temp[i])
+			if (!anyWrong && delight_memory_usage_allocation_location(i + startingAllocCount) != temp[i])
 			{
 				anyWrong = true;
 			}
