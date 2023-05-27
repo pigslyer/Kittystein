@@ -39,7 +39,7 @@ void pathless_iterate_end(IterationFile* file)
 	}
 
 	pathless_directory_close(file->currentDirectory);
-	//free(file);
+	free(file);
 }
 
 
