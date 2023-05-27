@@ -51,3 +51,231 @@ void pathless_directory_test()
 	pathless_directory_close(dir);
 }
 
+#include <watchman.h>
+FLOOFY_TEST_REGISTER(floofy_iteration_file_test, true)
+
+void floofy_iteration_file_test()
+{
+	struct PathSettings
+	{
+		bool recursive;
+		bool includeFolders;
+		char* includedFolders[20];
+		char* expectedResults[20];
+	};
+
+	struct PathSettings tests[] = 
+	{
+		// 0 -----------------------------
+		// all files, full recursion 
+		{
+			true, false,
+			{
+				"",
+				null,
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1/folder1file1.f",
+				"./src/pathless/p_tests_root/folder1/folder1file2.t",
+				"./src/pathless/p_tests_root/folder2/folder2file1.f",
+				null
+			}
+		},
+
+		// 1 -----------------------------
+		// all files, no recursion
+		{
+			false, false,
+			{
+				"",
+				null
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				null,
+			},
+		},
+
+		// 2 -----------------------------
+		// no files, full recursion
+		{
+			true, false,
+			{
+				null,
+			},
+			{
+				null,
+			},
+		},
+
+		// 3 ------------------------------
+		// no files, no recursion
+		{
+			false, false,
+			{
+				null,
+			},
+			{
+				null,
+			},
+		},
+
+		// 4 ------------------------------
+		// .t files, full recursion
+		{
+			true, false,
+			{
+				".t",
+				null,
+			},
+			{
+				"./src/pathless/p_tests_root/folder1/folder1file2.t",
+				null,	
+			},
+		},
+		
+		// 5 ------------------------------
+		// .t files, no recursion
+		{
+			false, false,
+			{
+				".t",
+				null,
+			},
+			{
+				null,
+			},
+		},
+
+		// 6 ------------------------------
+		// .f files, full recursion
+		{
+			true, false,
+			{
+				".f",
+				null
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1/folder1file1.f",
+				"./src/pathless/p_tests_root/folder2/folder2file1.f",
+				null,
+			}
+		},
+
+		// 7 -------------------------------
+		// .f files, no recursion
+		{
+			false, false,
+			{
+				".f",
+				null
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				null,
+			}
+		},
+		
+		// 8 --------------------------------
+		// all files and folders, full recursion
+		{
+			true, true,
+			{
+				"",
+				null,
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1",
+				"./src/pathless/p_tests_root/folder1/folder1file1.f",
+				"./src/pathless/p_tests_root/folder1/folder1file2.t",
+				"./src/pathless/p_tests_root/folder2",
+				"./src/pathless/p_tests_root/folder2/folder2file1.f",
+				null,
+			},
+		},
+		
+		// 9 --------------------------------
+		// all files and folders, no recursion
+		{
+			false, true,
+			{
+				"",
+				null,
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1",
+				"./src/pathless/p_tests_root/folder2",
+				null,
+			}
+		},
+
+		
+		// 10 -------------------------------
+		// .f files and all folders, full recursion
+		{
+			true, true,
+			{
+				".f",
+			},
+			{
+				"./src/pathless/p_tests_root/file1.f",
+				"./src/pathless/p_tests_root/folder1",
+				"./src/pathless/p_tests_root/folder1/folder1file1.f",
+				"./src/pathless/p_tests_root/folder2",
+				"./src/pathless/p_tests_root/folder2/folder2file1.f",
+				null,
+			}
+		}
+	};
+
+	struct PathSettings* cur;
+	IterationFile* file;
+	uint inclusionCount;
+
+	for (uint i = 0; i < sizeof tests / sizeof *tests; i++)
+	{
+		cur = &tests[i];
+
+		for (inclusionCount = 0; cur->includedFolders[inclusionCount] != null; inclusionCount++)
+		{ }
+
+		file = pathless_iterate_begin("./src/pathless/p_tests_root", cur->recursive, cur->includeFolders, cur->includedFolders, inclusionCount);
+
+		uint total;
+		uint countTooMany = 0;
+		uint countFound = 0;
+
+		while (pathless_iterate_next(file))
+		{
+			bool found = false;
+			for (uint j = 0; cur->expectedResults[j] != null; j++)
+			{
+				if (delight_string_equals(pathless_iterate_get_current(file), cur->expectedResults[j]))
+				{
+					found = true;
+					countFound += 1;
+					break;
+				}
+
+			}
+			
+			if (!found)
+			{
+				countTooMany += 1;
+			}
+		}
+
+		for (total = 0; cur->expectedResults[total] != null; total++)
+		{ }
+
+		FLOOFY_TEST_ASSERT_ARG(total == countFound, "Missed %d files during test %d!", total - countFound, i);
+
+		FLOOFY_TEST_ASSERT_ARG(countTooMany == 0, "Found %d too many files during test %d!", countTooMany, i);
+
+		pathless_iterate_end(file);
+	}
+}
