@@ -58,4 +58,9 @@ void 							pathless_directory_close(Directory* directory);
 /// @return The internal array of files this directory contains. This should NOT be freed.
 const char* const * const		pathless_directory_ls(Directory* directory, uint* fileCount);
 
+
+char*							pathless_file_read_as_text(const char* const path, size_t* length);
+
+void							pathless_file_write_as_text(const char* const path, char* buffer, size_t length);
+
 #endif

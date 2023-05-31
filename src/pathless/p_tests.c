@@ -51,7 +51,6 @@ void pathless_directory_test()
 	pathless_directory_close(dir);
 }
 
-#include <watchman.h>
 FLOOFY_TEST_REGISTER(floofy_iteration_file_test, true)
 
 void floofy_iteration_file_test()
@@ -294,4 +293,16 @@ void floofy_iteration_file_test()
 
 		pathless_iterate_end(file);
 	}
+}
+
+FLOOFY_TEST_REGISTER(floofy_text_file_read_test, true)
+
+void floofy_text_file_read_test()
+{
+	const char* const testText = "zora zora zorica me budi\nopa cupa celo noc je bilo";
+	char* text = pathless_file_read_as_text("./src/pathless/p_tests_root/file1.f", null);
+
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(text, testText), "Got \n%s\n instead of \n%s\n when reading text file!", text, testText);
+
+	free(text);
 }
