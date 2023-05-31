@@ -1,7 +1,5 @@
 #include "p_internal.h"
 
-#include <watchman.h>
-
 #include <stdio.h>
 
 char* pathless_file_read_as_text(const char* const path, size_t* length)
