@@ -85,6 +85,12 @@ char*					delight_string_substring(const char* const string, size_t from, size_t
 
 char**					delight_string_split(const char* const string, char byChar, uint* splitCount);
 
+/// @brief Removes either leading, ending or all whitespace from string. Whitespace is currently spaces and tabs.
+/// @param string The string we wish to remove whitespace from.
+/// @param removeLeading Whether all whitespace should be removed from the start.
+/// @param removeEnding Whether all whitespace should be removed from the end.
+/// @return The newly allocated, trimmed string.
+char*					delight_string_remove_whitespace(const char* const string, bool removeLeading, bool removeEnding);
 
 // tried making a macro for calling this, C didn't like it.
 /// @brief Returns the character in the passed string where "src" first occurs or null if the string is too short or doesn't contain "src". The string returned by this function should not be freed, rather the passed argument should be.

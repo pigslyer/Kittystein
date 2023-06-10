@@ -160,3 +160,27 @@ char** delight_string_split(const char* const string, char byChar, uint* splitCo
 
 	return ret;
 }
+
+char* delight_string_remove_whitespace(const char* const string, bool removeLeading, bool removeEnding)
+{
+	const char TAB = '	';
+	const char SPACE = ' ';
+
+	size_t starting = 0;
+
+	if (removeLeading)
+	{
+		for (; string[starting] != '\0' && (string[starting] == SPACE || string[starting] == TAB); starting++)
+		{ }
+	}
+
+	size_t ending = delight_string_length(string) - 1;
+
+	if (removeEnding)
+	{
+		for (; string[ending] == SPACE || string[ending] == TAB; ending--)
+		{ }
+	}
+
+	return delight_string_substring(string, starting, ending - starting + 1);
+}

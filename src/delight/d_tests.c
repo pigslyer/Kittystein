@@ -46,6 +46,33 @@ void delight_string_test()
 	
 
 	FLOOFY_TEST_ASSERT(delight_string_ends_with(string, ""), "String should always end with an empty string!");
+
+
+	const char* const whiteSpaceString = "  a string with some whitespace 	";
+	const char* const noLeadingWhitespaceString = "a string with some whitespace 	";
+	const char* const noEndingWhitespaceString = "  a string with some whitespace";
+	const char* const noWhitespaceString = "a string with some whitespace";
+
+	char* whitespaceTestString = delight_string_remove_whitespace(whiteSpaceString, false, false);
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(whitespaceTestString, whiteSpaceString), "Removal using no whitespace returned \"%s\"!", whitespaceTestString);
+	free(whitespaceTestString);
+
+	whitespaceTestString = delight_string_remove_whitespace(whiteSpaceString, true, false);
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(whitespaceTestString, noLeadingWhitespaceString), "Removal using leading whitespace returned \"%s\"!", whitespaceTestString);
+	free(whitespaceTestString);
+	
+
+	whitespaceTestString = delight_string_remove_whitespace(whiteSpaceString, false, true);
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(whitespaceTestString, noEndingWhitespaceString), "Removal using ending whitespace returned \"%s\"!", whitespaceTestString);
+	free(whitespaceTestString);
+	
+	whitespaceTestString = delight_string_remove_whitespace(whiteSpaceString, true, true);
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(whitespaceTestString, noWhitespaceString), "Removal using all whitespace returned \"%s\"!", whitespaceTestString);
+	free(whitespaceTestString);
+
+	whitespaceTestString = delight_string_remove_whitespace(noWhitespaceString, true, true);
+	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(whitespaceTestString, noWhitespaceString), "Removal of non-existent whitespace returned \"%s\"!", whitespaceTestString);
+	free(whitespaceTestString);
 }
 
 #ifndef DELIGHT_MEMORY_TRACKER
