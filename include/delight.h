@@ -79,6 +79,12 @@ bool					delight_string_equals(const char* const string1, const char* const stri
 
 bool					delight_string_ends_with(const char* const string, const char* const suffix);
 
+size_t					delight_string_index_of_char(const char* const string, char value, size_t from);
+
+char*					delight_string_substring(const char* const string, size_t from, size_t length);
+
+char**					delight_string_split(const char* const string, char byChar, uint* splitCount);
+
 
 // tried making a macro for calling this, C didn't like it.
 /// @brief Returns the character in the passed string where "src" first occurs or null if the string is too short or doesn't contain "src". The string returned by this function should not be freed, rather the passed argument should be.
@@ -88,6 +94,14 @@ char*					_delight_string_make_relative_to_src(char* string);
 
 
 bool					delight_enum_usage_req_eval(UsageReq req, bool value);
+
+char*					delight_convert_int_to_string(int val);
+
+char*					delight_convert_bool_to_string(bool val);
+
+int						delight_convert_string_to_int(char* str);
+
+bool					delight_convert_string_to_bool(char* str);
 
 
 #endif

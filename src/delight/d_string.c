@@ -105,3 +105,58 @@ bool delight_string_ends_with(const char* const string, const char* const suffix
 
 	return delight_memory_equals(string + str_len - suffix_len, suffix, suffix_len);
 }
+
+
+size_t delight_string_index_of_char(const char* const string, char value, size_t from)
+{
+	size_t i;
+	for (i = from; string[i] != '\0'; i++)
+	{
+		if (string[i] == value)
+		{
+			return i;
+		}
+	}
+
+	return i;
+}
+
+char* delight_string_substring(const char* const string, size_t from, size_t length)
+{
+	char* ret = malloc(length + 1);
+
+	delight_memory_copy(ret, string + from, length);
+
+	ret[length] = '\0';
+	
+	return ret;
+}
+
+#include <watchman.h>
+
+char** delight_string_split(const char* const string, char byChar, uint* splitCount)
+{
+	const size_t CHUNK_SIZE = 16;
+	
+	size_t length = delight_string_length(string);
+	char** ret = malloc(CHUNK_SIZE * sizeof *ret);
+	uint count = 0;
+
+	for (size_t cur = 0, temp; cur < length; )
+	{
+		temp = delight_string_index_of_char(string, byChar, cur);
+
+		ret[count++] = delight_string_substring(string, cur, (temp - cur < length) ? temp - cur : length);
+
+		if (count % CHUNK_SIZE == 0)
+		{
+			ret = realloc(ret, count + CHUNK_SIZE);
+		}
+
+		cur = temp + 1;
+	}
+
+	*splitCount = count;
+
+	return ret;
+}
