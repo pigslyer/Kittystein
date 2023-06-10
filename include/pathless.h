@@ -15,6 +15,7 @@
 
 typedef void IterationFile;
 typedef void Directory;
+typedef void ConfigFile;
 
 #endif
 
@@ -58,9 +59,108 @@ void 							pathless_directory_close(Directory* directory);
 /// @return The internal array of files this directory contains. This should NOT be freed.
 const char* const * const		pathless_directory_ls(Directory* directory, uint* fileCount);
 
-
+/// @brief Opens file at path as text file and copies its contents into the returned character buffer, writing that string's length to length if a valid pointer was passed.
+/// @param path The path to the text file we wish to read.
+/// @param length The length of the text file, assuming it was read.
+/// @return A null terminated character buffer containing the contents of the file at path, or NULL if there was an issue opening it.
 char*							pathless_file_read_as_text(const char* const path, size_t* length);
 
+/// @brief Creates a text file and copies buffer into it, up to length.
+/// @param path The path at which it creates the new file. 
+/// @param buffer The buffer we wish to copy.
+/// @param length The buffer's length. If 0, calculates the length of the buffer, presupposing it's null terminated.
 void							pathless_file_write_as_text(const char* const path, char* buffer, size_t length);
+
+
+/// @brief Creates new, empty, config file object. 
+/// @return A pointer to the newly created config file object.
+ConfigFile*						pathless_config_file_new(void);
+
+/// @brief Frees the given config file, alongside all its internal categories, keys and values.
+/// @param file The file we wish to free.
+void							pathless_config_file_free(ConfigFile* file);
+
+/// @brief Clears all keys and categories from config file without deleting it.
+/// @param file The file we wish to clear.
+void							pathless_config_file_clear(ConfigFile* file);
+
+/// @brief Saves the current contents of the config file to a specified location.
+/// @param file The file we wish to save.
+/// @param path The path to where we wish to save this config file.
+void							pathless_config_file_save(ConfigFile* file, const char* const path);
+
+/// @brief Loads contents from config file at path to file, clearing the file first.
+/// @param file The file we wish to load to.
+/// @param path The path we wish to load from.
+void							pathless_config_file_load(ConfigFile* file, const char* const path);
+
+/// @brief Saves given string to category category with key file on file. The passed string is copied and can be changed after.
+/// @param file The file we wish to save a string to.
+/// @param category The category we wish to save a string to.
+/// @param key The key under which we wish to save a string.
+/// @param value The value we wish to save.
+void							pathless_config_file_save_string(ConfigFile* file, const char* const category, const char* const key, const char* const value);
+
+/// @brief Saves given int to category category with key file on file.
+/// @param file The file we wish to save an int to.
+/// @param category The category we wish to save an int to.
+/// @param key The key under which we wish to save an int.
+/// @param value The value we wish to save.
+void							pathless_config_file_save_int(ConfigFile* file, const char* const category, const char* const key, int value);
+
+/// @brief Saves given bool to category category with key file on file.
+/// @param file The file we wish to save a bool to.
+/// @param category The category we wish to save a bool to.
+/// @param key The key under which we wish to save a bool.
+/// @param value The value we wish to save.
+void							pathless_config_file_save_bool(ConfigFile* file, const char* const category, const char* const key, bool value);
+
+/// @brief Attempts to load a string from file file, under category category, key key.
+/// @param file The file we wish to load from.
+/// @param category The category we wish to load from.
+/// @param key The key we wish to load from.
+/// @param value The read value, assuming it exists.
+/// @return Returns true if the config file contains a valid string under the provided path.
+bool							pathless_config_file_try_load_string(ConfigFile* file, const char* const category, const char* const key, char** value);
+
+/// @brief Attempts to load an int from file file, under category category, key key.
+/// @param file The file we wish to load from.
+/// @param category The category we wish to load from.
+/// @param key The key we wish to load from.
+/// @param value The read value, assuming it's valid and exists.
+/// @return Returns true if the config file contains a valid int under the provided path.
+bool							pathless_config_file_try_load_int(ConfigFile* file, const char* const category, const char* const key, int* value);
+
+/// @brief Attempts to load a bool from file file, under category category, key key.
+/// @param file The file we wish to load from.
+/// @param category The category we wish to load from.
+/// @param key The key we wish to load from.
+/// @param value The read value, assuming it's valid and exists.
+/// @return Returns true if the config file contains a valid bool under the provided path.
+bool							pathless_config_file_try_load_bool(ConfigFile* file, const char* const category, const char* const key, bool* value);
+
+/// @brief Gets all categories contained in this file.
+/// @param file The file from which we wish to get all categories.
+/// @param count Contains the number of categories contained by this file.
+/// @return The first element in a string array containing all categories.
+char**							pathless_config_file_get_categories(ConfigFile* file, uint* count);
+
+/// @brief Gets all keys in a category contained in this file.
+/// @param file The file from which we wish to get all keys.
+/// @param category The category from which we wish to get all keys.
+/// @param count Contains the number of keys this category has. 
+/// @return The first element in a string array containing all keys.
+char**							pathless_config_file_get_keys(ConfigFile* file, const char* const category, uint* count);
+
+/// @brief Removes specified key from this config file.
+/// @param file The file we wish to remove a key from.
+/// @param category The category from which we wish to remove a key.
+/// @param key The key we wish to remove.
+void 							pathless_config_file_remove_key(ConfigFile* file, const char* const category, const char* const key);
+
+/// @brief Removes specified category from this config file. This removes all keys associated with it.
+/// @param file The file we wish to remove a category.
+/// @param category The category we wish to remove.
+void							pathless_config_file_remove_category(ConfigFile* file, const char* const category);
 
 #endif

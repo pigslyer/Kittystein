@@ -1,8 +1,6 @@
 #ifndef PATHLESS_INTERNAL
 #define PATHLESS_INTERNAL
 
-#include <dirent.h>
-
 #include <delight.h>
 
 typedef struct
@@ -12,7 +10,7 @@ typedef struct
 	uint 		containsCount;
 } Directory;
 
-struct IterationFile
+typedef struct IterationFile
 {
 	struct IterationFile* currentFileIterator;
 	Directory* currentDirectory;
@@ -23,9 +21,24 @@ struct IterationFile
 	
 	uint includingCount;
 	const char** includingExtensions;
-};
+} IterationFile;
 
-typedef struct IterationFile IterationFile;
+typedef struct ConfigCategory
+{
+	char* categoryName;
+	char** keys;
+	char** values;
+	uint pairCount;
+	uint pairLength;
+} ConfigCategory;
+
+typedef struct ConfigFile
+{
+	ConfigCategory* categories;
+	uint categoryCount;
+	uint categoryLength;
+} ConfigFile;
+
 
 bool pathless_path_is_dir(const char* const path);
 
