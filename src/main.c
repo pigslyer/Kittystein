@@ -1,6 +1,6 @@
-#include <floofy.h>
+#include <witness.h>
 
 int main(void)
 {
-	floofy_test_run();
+	witness_loop_start();
 }
