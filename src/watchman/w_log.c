@@ -6,22 +6,15 @@
 #include <sys/time.h>
 #include <time.h>
 
-typedef enum
-{
-	W_L_ERROR,
-	W_L_WARNING,
-	W_L_MESSAGE,
-	W_L_COUNT,
-} W_LOG_TYPE;
 
-void watchman_log(W_LOG_TYPE type, const char* message, va_list args);
+void watchman_log(MessageType type, const char* message, va_list args);
 
 void watchman_log_error(const char* message, ...)
 {
 	va_list args;
 	va_start(args, message);
 
-	watchman_log(W_L_ERROR, message, args);
+	watchman_log(MESSAGE_ERROR, message, args);
 
 	va_end(args);
 }
@@ -31,7 +24,7 @@ void watchman_log_warning(const char* message, ...)
 	va_list args;
 	va_start(args, message);
 
-	watchman_log(W_L_WARNING, message, args);
+	watchman_log(MESSAGE_WARNING, message, args);
 
 	va_end(args);
 }
@@ -41,24 +34,24 @@ void watchman_log_message(const char* message, ...)
 	va_list args;
 	va_start(args, message);
 
-	watchman_log(W_L_MESSAGE, message, args);
+	watchman_log(MESSAGE_NORMAL, message, args);
 
 	va_end(args);
 }
 
 void watchman_log_errorv(const char* message, va_list list)
 {
-	watchman_log(W_L_ERROR, message, list);
+	watchman_log(MESSAGE_ERROR, message, list);
 }
 
 void watchman_log_warningv(const char* message, va_list list)
 {
-	watchman_log(W_L_WARNING, message, list);
+	watchman_log(MESSAGE_WARNING, message, list);
 }
 
 void watchman_log_messagev(const char* message, va_list list)
 {
-	watchman_log(W_L_MESSAGE, message, list);
+	watchman_log(MESSAGE_NORMAL, message, list);
 }
 
 #define ANSI_COLOR_RED		"\x1b[31m"
@@ -70,7 +63,7 @@ void watchman_log_messagev(const char* message, va_list list)
 #define ANSI_COLOR_RESET	"\x1b[0m"
 
 
-void watchman_log(W_LOG_TYPE type, const char* message, va_list args)
+void watchman_log(MessageType type, const char* message, va_list args)
 {
 	// casually stolen from https://www.w3schools.blog/c-get-time-in-milliseconds
 	struct timeval epochTime; 
@@ -84,19 +77,19 @@ void watchman_log(W_LOG_TYPE type, const char* message, va_list args)
 	char* log_color;
 	switch (type)
 	{
-		case W_L_ERROR:
+		case MESSAGE_ERROR:
 		log_type = "[!ERROR!]";
 		log_color = ANSI_COLOR_RED;
 
 		break;
 		
-		case W_L_WARNING:
+		case MESSAGE_WARNING:
 		log_type = "[WARNING]";
 		log_color = ANSI_COLOR_YELLOW;
 
 		break;
 		
-		case W_L_MESSAGE:
+		case MESSAGE_NORMAL:
 		default:
 		log_type = "[MESSAGE]";
 		log_color = "";

@@ -21,10 +21,18 @@ typedef unsigned char byte;
 
 typedef enum
 {
-	UsageReqNever,
-	UsageReqOptional,
-	UsageReqRequired,
+	USAGE_REQ_NEVER,
+	USAGE_REQ_OPTIONAL,
+	USAGE_REQ_REQUIRED,
 } UsageReq;
+
+
+typedef enum
+{
+	MESSAGE_ERROR,
+	MESSAGE_WARNING,
+	MESSAGE_NORMAL,
+} MessageType;
 
 #ifndef DELIGHT_INTERNAL
 
