@@ -5,7 +5,7 @@
 
 #define WATCHMAN_EXPOSE_VA_LIST
 #include <watchman.h>
-
+#include <witness.h>
 
 FloofyTest floofyRegisteredFunctions[100];
 uint floofyFunctionCount = 0;
@@ -103,6 +103,8 @@ void floofy_test_run()
 	{
 #ifdef DELIGHT_MEMORY_TRACKER
 		watchman_log_message("No memory was leaked!");
+#else
+		watchman_log_message("Memory tracking was not enabled!");
 #endif
 	}
 }
