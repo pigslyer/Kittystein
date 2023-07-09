@@ -19,6 +19,8 @@ typedef uint64_t ulong;
 typedef unsigned int uint;
 typedef unsigned char byte;
 
+#define Bit(power) 1 << power
+
 typedef enum
 {
 	USAGE_REQ_NEVER,
