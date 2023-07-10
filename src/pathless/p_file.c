@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 
-char* pathless_file_read_as_text(const char* const path, size_t* length)
+char* pathless_file_read_as_text(const char* const path, u64* length)
 {
-	const size_t CHUNK_SIZE = 1024;
+	const u64 CHUNK_SIZE = 1024;
 	FILE* file = fopen(path, "r");
 
 	if (!file)
@@ -12,8 +12,8 @@ char* pathless_file_read_as_text(const char* const path, size_t* length)
 		return null;
 	}
 
-	size_t curRead;
-	size_t curOffset = 0;
+	u64 curRead;
+	u64 curOffset = 0;
 	char* ret = malloc(CHUNK_SIZE);
 
 	while ((curRead = fread(ret + curOffset, sizeof(char), CHUNK_SIZE, file)) == CHUNK_SIZE)
@@ -32,7 +32,7 @@ char* pathless_file_read_as_text(const char* const path, size_t* length)
 	return ret;
 }
 
-void pathless_file_write_as_text(const char* const path, char* buffer, size_t length)
+void pathless_file_write_as_text(const char* const path, char* buffer, u64 length)
 {
 	FILE* file = fopen(path, "w");
 
@@ -43,7 +43,7 @@ void pathless_file_write_as_text(const char* const path, char* buffer, size_t le
 
 	if (length == 0)
 	{
-		length = delight_string_length(buffer);
+		length = string_length(buffer);
 	}
 
 	fwrite(buffer, sizeof(char), length, file);

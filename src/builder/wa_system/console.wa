@@ -1,7 +1,0 @@
-public static class Console
-{
-	public static void WriteLine(object? str)
-	{
-		watchman::watchman_log_message(str.ToString().ToCString());
-	}
-}

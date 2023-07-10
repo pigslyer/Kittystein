@@ -12,7 +12,7 @@ typedef struct
 
 
 extern witness_function_data* functions;
-extern uint functionCount;
+extern u32 functionCount;
 
 
 #endif

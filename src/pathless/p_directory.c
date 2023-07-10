@@ -1,23 +1,23 @@
 #include "p_internal.h"
 
 #include <dirent.h>
-#include <milk.h>
+#include <watchman.h>
 
 Directory* pathless_directory_open(const char* const path)
 {
 	char* pathWithSlash;
 	char* pathWithoutSlash;
-	if (path[delight_string_length(path)] != '/')
+	if (path[string_length(path)] != '/')
 	{
-		pathWithSlash = delight_string_concat(path, "/");
-		pathWithoutSlash = delight_string_copy(path);
+		pathWithSlash = string_concat(path, "/");
+		pathWithoutSlash = string_copy(path);
 	}
 	else
 	{
-		pathWithSlash = delight_string_copy(path);
+		pathWithSlash = string_copy(path);
 
-		pathWithoutSlash = delight_string_copy(path);
-		pathWithoutSlash[delight_string_length(pathWithoutSlash)] = '\0';
+		pathWithoutSlash = string_copy(path);
+		pathWithoutSlash[string_length(pathWithoutSlash)] = '\0';
 	}
 
 	DIR* d = opendir(pathWithoutSlash);
@@ -30,27 +30,29 @@ Directory* pathless_directory_open(const char* const path)
 	}
 
 	struct dirent* cur;
-	LinkedList* list = milk_linked_list_new(sizeof(char*));
 
-	char* curString;
 	char* curName;
-	while ((cur = readdir(d)) != null)
+
+	const u32 maxCount = 1024;
+
+	char* folderContains[maxCount];
+	u32 count = 0;
+
+	while ((cur = readdir(d)) != null && count < maxCount)
 	{
 		curName = cur->d_name;
-		if (!delight_string_equals(curName, ".") && !delight_string_equals(curName, ".."))
+		if (!string_equals(curName, ".") && !string_equals(curName, ".."))
 		{
-			curString = (char*) delight_string_concat(pathWithSlash, curName);
-			milk_linked_list_add_first(list, &curString);
+			folderContains[count++] = (char*) string_concat(pathWithSlash, curName);
 		}
 	}
 
 	Directory* ret = malloc(sizeof *ret);
 
-	ret->pathToDir = delight_string_copy(path);
-	ret->contains = (char**) milk_linked_list_to_array(list);
-	ret->containsCount = milk_linked_list_count(list);
+	ret->pathToDir = string_copy(path);
+	ret->contains = memory_duplicate(folderContains, count * sizeof *folderContains);;
+	ret->containsCount = count;
 
-	milk_linked_list_free(list);
 	free(pathWithSlash);
 	free(pathWithoutSlash);
 
@@ -59,9 +61,9 @@ Directory* pathless_directory_open(const char* const path)
 
 void pathless_directory_close(Directory* directory)
 {
-	uint containsCount = directory->containsCount;
+	u32 containsCount = directory->containsCount;
 
-	for (uint i = 0; i < containsCount; i++)
+	for (u32 i = 0; i < containsCount; i++)
 	{
 		free(directory->contains[i]);
 	}
@@ -71,7 +73,7 @@ void pathless_directory_close(Directory* directory)
 	free(directory);
 }
 
-const char* const * const pathless_directory_ls(Directory* directory, uint* containsCount)
+const char* const * const pathless_directory_ls(Directory* directory, u32* containsCount)
 {
 	*containsCount = directory->containsCount;
 	return (const char* const * const) directory->contains;

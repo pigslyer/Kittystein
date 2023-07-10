@@ -3,6 +3,8 @@
 #define FLOOFY_EXPOSE_TEST_SUITE
 #include <floofy.h>
 
+#include <watchman.h>
+
 FLOOFY_TEST_REGISTER(pathless_directory_test, true)
 
 void pathless_directory_test()
@@ -17,10 +19,10 @@ void pathless_directory_test()
 	dir = pathless_directory_open(testRoot);
 
 	FLOOFY_TEST_ASSERT(dir != null, "Could not open working directory!");
-	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(dir->pathToDir, testRoot), "Path to dir is not correct! %s instead of %s!", dir->pathToDir, testRoot);
+	FLOOFY_TEST_ASSERT_ARG(string_equals(dir->pathToDir, testRoot), "Path to dir is not correct! %s instead of %s!", dir->pathToDir, testRoot);
 	FLOOFY_TEST_ASSERT(dir->pathToDir != testRoot, "Dir did not copy string value to its path!");
 
-	uint count = dir->containsCount;
+	u32 count = dir->containsCount;
 
 	const char* const expectedContents[] = {
 		"./src/pathless/p_tests_root/file1.f", 
@@ -28,18 +30,18 @@ void pathless_directory_test()
 		"./src/pathless/p_tests_root/folder2",
 	};
 
-	const uint expectedLength = sizeof(expectedContents) / sizeof(*expectedContents);
+	const u32 expectedLength = sizeof(expectedContents) / sizeof(*expectedContents);
 
 	FLOOFY_TEST_ASSERT_ARG(count == expectedLength, "Dir claims %s does not contain %d files, but instead %d!", testRoot, expectedLength, count);
 
-	for (uint i = 0; i < expectedLength; i++)
+	for (u32 i = 0; i < expectedLength; i++)
 	{
 		bool hasFound = false;
 
-		for (uint j = 0; j < dir->containsCount; j++)
+		for (u32 j = 0; j < dir->containsCount; j++)
 		{
-			if (delight_string_equals(expectedContents[i], dir->contains[j]))
-			{
+			if (string_equals(expectedContents[i], dir->contains[j]))
+			{			
 				hasFound = true;
 				break;
 			}
@@ -247,9 +249,9 @@ void floofy_iteration_file_test()
 
 	struct PathSettings* cur;
 	IterationFile* file;
-	uint inclusionCount;
+	u32 inclusionCount;
 
-	for (uint i = 0; i < sizeof tests / sizeof *tests; i++)
+	for (u32 i = 0; i < sizeof tests / sizeof *tests; i++)
 	{
 		cur = &tests[i];
 
@@ -260,16 +262,16 @@ void floofy_iteration_file_test()
 
 		FLOOFY_TEST_ASSERT(file, "Could not open iterator!");
 
-		uint total;
-		uint countTooMany = 0;
-		uint countFound = 0;
+		u32 total;
+		u32 countTooMany = 0;
+		u32 countFound = 0;
 
 		while (pathless_iterate_next(file))
 		{
 			bool found = false;
-			for (uint j = 0; cur->expectedResults[j] != null; j++)
+			for (u32 j = 0; cur->expectedResults[j] != null; j++)
 			{
-				if (delight_string_equals(pathless_iterate_get_current(file), cur->expectedResults[j]))
+				if (string_equals(pathless_iterate_get_current(file), cur->expectedResults[j]))
 				{
 					found = true;
 					countFound += 1;
@@ -287,7 +289,7 @@ void floofy_iteration_file_test()
 		for (total = 0; cur->expectedResults[total] != null; total++)
 		{ }
 
-		FLOOFY_TEST_ASSERT_ARG(total == countFound, "Missed %d files during test %d!", total - countFound, i);
+		FLOOFY_TEST_ASSERT_ARG(total == countFound, "Missed %d/%d files during test %d!", total - countFound, total, i);
 
 		FLOOFY_TEST_ASSERT_ARG(countTooMany == 0, "Found %d too many files during test %d!", countTooMany, i);
 
@@ -302,7 +304,7 @@ void floofy_text_file_read_test()
 	const char* const testText = "zora zora zorica me budi\nopa cupa celo noc je bilo";
 	char* text = pathless_file_read_as_text("./src/pathless/p_tests_root/file1.f", null);
 
-	FLOOFY_TEST_ASSERT_ARG(delight_string_equals(text, testText), "Got \n%s\n instead of \n%s\n when reading text file!", text, testText);
+	FLOOFY_TEST_ASSERT_ARG(string_equals(text, testText), "Got \n%s\n instead of \n%s\n when reading text file!", text, testText);
 
 	free(text);
 }

@@ -1,10 +1,9 @@
 #include "p_internal.h"
 
+#include <watchman.h>
 
-IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, const char** onlyExtensions, uint includeCount)
+IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, const char** onlyExtensions, u32 includeCount)
 {
-	
-
 	IterationFile* ret = malloc(sizeof(IterationFile));
 
 	ret->currentFileIterator = null;
@@ -15,7 +14,7 @@ IterationFile* pathless_iterate_begin(const char* const path, bool recursive, bo
 	ret->allowsDirs = allowDirs;
 
 	ret->includingCount = includeCount;
-	ret->includingExtensions = includeCount > 0 ? delight_memory_duplicate(onlyExtensions, includeCount * sizeof *onlyExtensions) : null;
+	ret->includingExtensions = includeCount > 0 ? memory_duplicate(onlyExtensions, includeCount * sizeof *onlyExtensions) : null;
 	
 	return ret;
 }
@@ -56,7 +55,7 @@ bool pathless_iterate_next(IterationFile* file)
 {
 	const char* curPath;
 
-	uint containsCount;
+	u32 containsCount;
 	const char* const * contains = pathless_directory_ls(file->currentDirectory, &containsCount);
 
 	// if we're currently iterating a subdirectory, check if that one's done
@@ -121,9 +120,9 @@ bool pathless_iterate_next(IterationFile* file)
 	}
 	else
 	{
-		for (uint i = 0; i < file->includingCount; i++)
+		for (u32 i = 0; i < file->includingCount; i++)
 		{
-			if (delight_string_ends_with(curPath, file->includingExtensions[i]))
+			if (string_ends_with(curPath, file->includingExtensions[i]))
 			{
 				return true;
 			}

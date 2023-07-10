@@ -12,10 +12,10 @@ typedef struct
 	FloofyTestFunction 	functionCallback;
 	const char*			functionName;
 	const char* 		filePath;
-	uint 				lineNumber;
+	u32 				lineNumber;
 } FloofyTest;
 
-extern uint		  		floofyFunctionCount;
+extern u32		  		floofyFunctionCount;
 extern FloofyTest 		floofyRegisteredFunctions[];
 
 #include <floofy.h>

@@ -15,7 +15,7 @@ void stein_loop(void);
 
 // -------------------------------------------------------
 // CONSTANTS
-extern const uint DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
+extern const u32 DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT;
 extern const char* const DEFAULT_WINDOW_NAME;
 
 #include <stein.h>

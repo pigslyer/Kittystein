@@ -8,14 +8,14 @@
 #include <witness.h>
 
 FloofyTest floofyRegisteredFunctions[100];
-uint floofyFunctionCount = 0;
+u32 floofyFunctionCount = 0;
 
 void floofy_test_function(FloofyTestFunction func)
 {
 	floofyRegisteredFunctions[floofyFunctionCount++].functionCallback = func;
 }
 
-void floofy_test_function_full(FloofyTestFunction func, const char* const file, const uint line, const char* const funcName)
+void floofy_test_function_full(FloofyTestFunction func, const char* const file, const u32 line, const char* const funcName)
 {
 	FloofyTest* curTest = &floofyRegisteredFunctions[floofyFunctionCount++];
 
@@ -25,27 +25,32 @@ void floofy_test_function_full(FloofyTestFunction func, const char* const file, 
 	curTest->lineNumber = line;
 }
 
-uint floofyTestCount;
-uint floofyTestFailures;
+static u32 floofyTestCount;
+static u32 floofyTestFailures;
 
 void floofy_test_run()
 {
-	ulong preAllocCount, postAllocCount;
-	size_t preAlloc, postAlloc;
-	delight_memory_usage_report(&preAllocCount, &preAlloc);
+	u64 preAllocCount, postAllocCount;
+	u64 preAlloc, postAlloc;
+	memory_usage_report(&preAllocCount, &preAlloc);
 
 	FloofyTest* curTest;
 
 	floofyTestCount = 0;
-	uint totalFailures = 0;
-	uint totalTests = 0;
+	u32 totalFailures = 0;
+	u32 totalTests = 0;
 
-	for (uint i = 0; i < floofyFunctionCount; i++)
+	for (u32 i = 0; i < floofyFunctionCount; i++)
 	{
 		curTest = &floofyRegisteredFunctions[i];
 
 		floofyTestFailures = 0;
 		floofyTestCount = 0;
+
+		if (curTest->functionName)
+		{
+			watchman_log_message("Starting test \"%s\"! Location: {%s:%d}", curTest->functionName, curTest->filePath, curTest->lineNumber);
+		}
 
 		curTest->functionCallback();
 
@@ -80,7 +85,7 @@ void floofy_test_run()
 
 	watchman_log_message("All %d registered test functions have been run by Floofy. %d out of %d tests were successful!", floofyFunctionCount, totalTests - totalFailures, totalTests);
 
-	delight_memory_usage_report(&postAllocCount, &postAlloc);
+	memory_usage_report(&postAllocCount, &postAlloc);
 
 	if (preAlloc != postAlloc)
 	{
@@ -89,12 +94,12 @@ void floofy_test_run()
 
 
 		const char* locationFile;
-		uint locationLine;
+		u32 locationLine;
 		size_t amount;
-		for (ulong i = preAllocCount; i < postAllocCount; i++)
+		for (u64 i = preAllocCount; i < postAllocCount; i++)
 		{
-			delight_memory_usage_request_location(i, &locationFile, &locationLine);
-			amount = delight_memory_usage_allocation_amount(i);
+			memory_usage_request_location(i, &locationFile, &locationLine);
+			amount = memory_usage_allocation_amount(i);
 
 			watchman_log_message("Allocation % 3lld: Reserved % 6lld bytes at {./%s:%d}.", i - preAllocCount, amount, locationFile, locationLine);
 		}
@@ -126,7 +131,7 @@ void floofy_test_assert(bool value, const char* const error, ...)
 	}
 }
 
-void floofy_test_assert_full(const char* const file, const uint line, bool value, const char* const error, ...)
+void floofy_test_assert_full(const char* const file, const u32 line, bool value, const char* const error, ...)
 {
 	floofyTestCount += 1;
 

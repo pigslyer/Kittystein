@@ -1,7 +1,7 @@
 #include "p_internal.h"
 
-static const uint CATEGORY_CHUNK_SIZE = 16;
-static const uint KEY_CHUNK_SIZE = 16;
+static const u32 CATEGORY_CHUNK_SIZE = 16;
+static const u32 KEY_CHUNK_SIZE = 16;
 
 ConfigFile* pathless_config_file_new(void)
 {
@@ -23,10 +23,10 @@ void pathless_config_file_free(ConfigFile* file)
 void pathless_config_file_clear(ConfigFile* file)
 {
 	ConfigCategory* curCategory;
-	for (uint i = 0; i < file->categoryCount; i++)
+	for (u32 i = 0; i < file->categoryCount; i++)
 	{
 		curCategory = &file->categories[i];
-		for (uint j = 0; j < curCategory->pairCount; j++)
+		for (u32 j = 0; j < curCategory->pairCount; j++)
 		{
 			free(curCategory->keys[j]);
 			free(curCategory->values[j]);
@@ -43,39 +43,39 @@ void pathless_config_file_clear(ConfigFile* file)
 
 void pathless_config_file_save(ConfigFile* file, const char* const path)
 {
-	const size_t BUFFER_CHUNK_SIZE = 1024;
+	const u64 BUFFER_CHUNK_SIZE = 1024;
 	char* buffer = malloc(BUFFER_CHUNK_SIZE);
 	char* movedBuffer = buffer;
 
 	ConfigCategory* curCategory;
-	size_t stringLength;
-	for (uint i = 0; i < file->categoryCount; i++)
+	u64 stringLength;
+	for (u32 i = 0; i < file->categoryCount; i++)
 	{
 		curCategory = &file->categories[i];
-		stringLength = delight_string_length(curCategory->categoryName);
+		stringLength = string_length(curCategory->categoryName);
 		
 		movedBuffer[0] = '[';
 		movedBuffer += 1;
 
-		delight_memory_copy(movedBuffer, curCategory->categoryName, stringLength);
+		memory_copy(movedBuffer, curCategory->categoryName, stringLength);
 		movedBuffer += stringLength;
 
-		delight_memory_copy(movedBuffer, "]\n\n", 3);
+		memory_copy(movedBuffer, "]\n\n", 3);
 		movedBuffer += 3;
 
-		for (uint j = 0; j < curCategory->pairCount; j++)
+		for (u32 j = 0; j < curCategory->pairCount; j++)
 		{
-			stringLength = delight_string_length(curCategory->keys[j]);
+			stringLength = string_length(curCategory->keys[j]);
 			
-			delight_memory_copy(movedBuffer, curCategory->keys[j], stringLength);
+			memory_copy(movedBuffer, curCategory->keys[j], stringLength);
 			movedBuffer += stringLength;
 
 			movedBuffer[0] = '=';
 			movedBuffer += 1;
 
-			stringLength = delight_string_length(curCategory->values[j]);
+			stringLength = string_length(curCategory->values[j]);
 
-			delight_memory_copy(movedBuffer, curCategory->values[j], stringLength);
+			memory_copy(movedBuffer, curCategory->values[j], stringLength);
 			movedBuffer += stringLength;
 
 			movedBuffer[0] = '\n';
@@ -94,18 +94,18 @@ void pathless_config_file_load(ConfigFile* file, const char* const path)
 {
 	pathless_config_file_clear(file);
 
-	size_t fileLength;
+	u64 fileLength;
 	char* buffer = pathless_file_read_as_text(path, &fileLength);
 
-	uint newLineCount;
-	char** newLineSplit = delight_string_split(buffer, '\n', &newLineCount);
+	u32 newLineCount;
+	char** newLineSplit = string_split(buffer, '\n', &newLineCount);
 
 	char* curCategory = null;
 
-	for (uint i = 0; i < newLineCount; i++)
+	for (u32 i = 0; i < newLineCount; i++)
 	{
-		uint lineSplitCount;
-		char** lineSplit = delight_string_split(newLineSplit[i], '=', &lineSplitCount);
+		u32 lineSplitCount;
+		char** lineSplit = string_split(newLineSplit[i], '=', &lineSplitCount);
 
 		if (lineSplitCount == 1)
 		{
@@ -114,14 +114,14 @@ void pathless_config_file_load(ConfigFile* file, const char* const path)
 				free(curCategory);
 			}
 
-			curCategory = delight_string_substring(lineSplit[0], 1, delight_string_length(lineSplit[0]) - 2);
+			curCategory = string_substring(lineSplit[0], 1, string_length(lineSplit[0]) - 2);
 			
 			free(lineSplit[0]);
 		}
 		else if (lineSplitCount > 1)
 		{
-			size_t equalsPos = delight_string_index_of_char(newLineSplit[i], '=', 0);
-			char* savedValue = delight_string_substring(newLineSplit[i], equalsPos + 1, delight_string_length(newLineSplit[i]) - equalsPos);
+			u64 equalsPos = string_index_of_char(newLineSplit[i], '=', 0);
+			char* savedValue = string_substring(newLineSplit[i], equalsPos + 1, string_length(newLineSplit[i]) - equalsPos);
 			
 			pathless_config_file_save_string(
 				file, 
@@ -132,7 +132,7 @@ void pathless_config_file_load(ConfigFile* file, const char* const path)
 			
 			free(savedValue);
 
-			for (uint j = 0; j < lineSplitCount; j++)
+			for (u32 j = 0; j < lineSplitCount; j++)
 			{
 				free(lineSplit[j]);
 			}
@@ -165,7 +165,7 @@ ConfigCategory* pathless_config_file_category_append(ConfigFile* file, const cha
 	}
 
 	ConfigCategory* ret = &file->categories[file->categoryCount++];
-	ret->categoryName = delight_string_copy(category);
+	ret->categoryName = string_copy(category);
 	ret->keys = malloc(KEY_CHUNK_SIZE * sizeof *ret->keys);
 	ret->values = malloc(KEY_CHUNK_SIZE * sizeof *ret->values);
 	ret->pairCount = 0;
@@ -176,9 +176,9 @@ ConfigCategory* pathless_config_file_category_append(ConfigFile* file, const cha
 
 ConfigCategory* pathless_config_file_category_get(ConfigFile* file, const char* const category)
 {
-	for (uint i = 0; i < file->categoryCount; i++)
+	for (u32 i = 0; i < file->categoryCount; i++)
 	{
-		if (delight_string_equals(file->categories[i].categoryName, category))
+		if (string_equals(file->categories[i].categoryName, category))
 		{
 			return &file->categories[i];
 		}
@@ -196,9 +196,9 @@ void pathless_config_file_remove_category(ConfigFile* file, const char* const ca
 		return;
 	}
 
-	const uint count = deleting->pairCount;
+	const u32 count = deleting->pairCount;
 
-	for (uint i = 0; i < count; i++)
+	for (u32 i = 0; i < count; i++)
 	{
 		free(deleting->keys[i]);
 		free(deleting->values[i]);
@@ -243,9 +243,9 @@ void pathless_config_file_category_delete_key(ConfigCategory* category, const ch
 
 int pathless_config_file_category_get_key(ConfigCategory* category, const char* const key, bool createIfNonExistent)
 {
-	for (uint i = 0; i < category->pairCount; i++)
+	for (u32 i = 0; i < category->pairCount; i++)
 	{
-		if (delight_string_equals(category->keys[i], key))
+		if (string_equals(category->keys[i], key))
 		{
 			return i;
 		}
@@ -290,8 +290,8 @@ void pathless_config_file_save_string(ConfigFile* file, const char* const catego
 		free(chosen->values[idx]);
 	}
 
-	chosen->keys[idx] = delight_string_copy(key);
-	chosen->values[idx] = delight_string_copy(value);	
+	chosen->keys[idx] = string_copy(key);
+	chosen->values[idx] = string_copy(value);	
 }
 
 void pathless_config_file_save_int(ConfigFile* file, const char* const category, const char* const key, int value)
@@ -315,8 +315,8 @@ void pathless_config_file_save_int(ConfigFile* file, const char* const category,
 		free(chosen->values[idx]);
 	}
 
-	chosen->keys[idx] = delight_string_copy(key);
-	chosen->values[idx] = delight_convert_int_to_string(value);
+	chosen->keys[idx] = string_copy(key);
+	chosen->values[idx] = convert_i32_to_string(value);
 }
 
 void pathless_config_file_save_bool(ConfigFile* file, const char* const category, const char* const key, bool value)
@@ -340,8 +340,8 @@ void pathless_config_file_save_bool(ConfigFile* file, const char* const category
 		free(chosen->values[idx]);
 	}
 
-	chosen->keys[idx] = delight_string_copy(key);
-	chosen->values[idx] = delight_convert_bool_to_string(value);
+	chosen->keys[idx] = string_copy(key);
+	chosen->values[idx] = convert_bool_to_string(value);
 }
 
 bool pathless_config_file_try_load_string(ConfigFile* file, const char* const category, const char* const key, char** value)
@@ -381,7 +381,7 @@ bool pathless_config_file_try_load_int(ConfigFile* file, const char* const categ
 		return false;
 	}
 
-	*value = delight_convert_string_to_int(chosen->values[idx]);
+	*value = convert_string_to_i32(chosen->values[idx]);
 
 	return true;
 }
@@ -402,26 +402,26 @@ bool pathless_config_file_try_load_bool(ConfigFile* file, const char* const cate
 		return false;
 	}
 
-	*value = delight_convert_string_to_bool(chosen->values[idx]);
+	*value = convert_string_to_bool(chosen->values[idx]);
 
 	return true;
 }
 
-char** pathless_config_file_get_categories(ConfigFile* file, uint* count)
+char** pathless_config_file_get_categories(ConfigFile* file, u32* count)
 {
-	uint arrLen = *count = file->categoryCount;
+	u32 arrLen = *count = file->categoryCount;
 	
 	char** ret = malloc(arrLen * sizeof *ret);
 
-	for (uint i = 0; i < arrLen; i++)
+	for (u32 i = 0; i < arrLen; i++)
 	{
-		ret[i] = delight_string_copy(file->categories[i].categoryName);
+		ret[i] = string_copy(file->categories[i].categoryName);
 	}
 
 	return ret;
 }
 
-char** pathless_config_file_get_keys(ConfigFile* file, const char* const category, uint* count)
+char** pathless_config_file_get_keys(ConfigFile* file, const char* const category, u32* count)
 {
 	ConfigCategory* chosen = pathless_config_file_category_get(file, category);
 
@@ -431,12 +431,12 @@ char** pathless_config_file_get_keys(ConfigFile* file, const char* const categor
 		return null;
 	}
 
-	uint arrLen = *count = chosen->pairCount;
+	u32 arrLen = *count = chosen->pairCount;
 	char** ret = malloc(arrLen * sizeof *ret);
 
-	for (uint i = 0; i < arrLen; i++)
+	for (u32 i = 0; i < arrLen; i++)
 	{
-		ret[i] = delight_string_copy(chosen->keys[i]);
+		ret[i] = string_copy(chosen->keys[i]);
 	}
 
 	return ret;

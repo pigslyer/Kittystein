@@ -1,9 +1,9 @@
 #include "w_internal.h"
 
-const uint CHUNK_SIZE = 16;
+const u32 CHUNK_SIZE = 16;
 
 witness_function_data* functions = null;
-uint functionCount = 0;
+u32 functionCount = 0;
 
 void _witness_commands_register(witness_function function, const char* const name)
 {

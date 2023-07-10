@@ -68,9 +68,9 @@ void watchman_log(MessageType type, const char* message, va_list args)
 	// casually stolen from https://www.w3schools.blog/c-get-time-in-milliseconds
 	struct timeval epochTime; 
 	gettimeofday(&epochTime, null);
-	long long microseconds = epochTime.tv_usec;
+	u64 microseconds = epochTime.tv_usec;
 	
-	long long sec = (long long) epochTime.tv_sec;
+	i64 sec = epochTime.tv_sec;
 	struct tm* info = localtime(&sec);
 
 	char* log_type;

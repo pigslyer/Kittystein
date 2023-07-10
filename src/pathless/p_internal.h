@@ -7,7 +7,7 @@ typedef struct
 {
 	char* 		pathToDir;
 	char** 		contains;
-	uint 		containsCount;
+	u32 		containsCount;
 } Directory;
 
 typedef struct IterationFile
@@ -19,7 +19,7 @@ typedef struct IterationFile
 	bool recursive;
 	bool allowsDirs;
 	
-	uint includingCount;
+	u32 includingCount;
 	const char** includingExtensions;
 } IterationFile;
 
@@ -28,15 +28,15 @@ typedef struct ConfigCategory
 	char* categoryName;
 	char** keys;
 	char** values;
-	uint pairCount;
-	uint pairLength;
+	u32 pairCount;
+	u32 pairLength;
 } ConfigCategory;
 
 typedef struct ConfigFile
 {
 	ConfigCategory* categories;
-	uint categoryCount;
-	uint categoryLength;
+	u32 categoryCount;
+	u32 categoryLength;
 } ConfigFile;
 
 

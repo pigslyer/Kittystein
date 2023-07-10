@@ -37,7 +37,7 @@ void floofy_test_function(FloofyTestFunction func);
 /// @param func The new test.
 /// @param file The file in which the test is defined.
 /// @param line The line on which the test is started.
-void floofy_test_function_full(FloofyTestFunction func, const char* file, const uint line, const char* funcName);
+void floofy_test_function_full(FloofyTestFunction func, const char* file, const u32 line, const char* funcName);
 
 /// @brief Checks whether condition is false, printing the formatted message to Floofy's output.
 /// @param condition The condition we're checking against.
@@ -50,7 +50,7 @@ void floofy_test_assert(bool condition, const char* const error, ...);
 /// @param line The line on which this assertion failed.
 /// @param condition The condition we're checking against.
 /// @param error The formatted message to be outputted if the condition is FALSE.
-void floofy_test_assert_full(const char* const file, const uint line, bool value, const char* const error, ...);
+void floofy_test_assert_full(const char* const file, const u32 line, bool value, const char* const error, ...);
 
 
 #define FLOOFY_TEST_REGISTER(test_func_name, enable)																															\

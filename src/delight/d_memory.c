@@ -2,31 +2,31 @@
 
 #include <string.h>
 
-inline void* delight_memory_duplicate(const void* const sourceBuffer, size_t size)
+inline void* memory_duplicate(const void* const sourceBuffer, u64 size)
 {
 	void* ret = malloc(size);
-	delight_memory_copy(ret, sourceBuffer, size);
+	memory_copy(ret, sourceBuffer, size);
 	return ret;
 }
 
-inline void delight_memory_copy(void* destinationBuffer, const void* const sourceBuffer, size_t size)
+inline void memory_copy(void* destinationBuffer, const void* const sourceBuffer, u64 size)
 {
 	memcpy(destinationBuffer, sourceBuffer, size);
 }
 
 
-bool delight_memory_equals(const void* buffer1, const void* buffer2, const size_t size)
+bool memory_equals(const void* buffer1, const void* buffer2, const u64 size)
 {
 	return memcmp(buffer1, buffer2, size) == 0;
 }
 
-static const size_t usedMemoryCountIncrement = 1024;
+static const u64 usedMemoryCountIncrement = 1024;
 static MemoryAllocation* usedMemory;
 
-static size_t usedMemoryLength;
-static ulong usedMemoryCount;
+static u64 usedMemoryLength;
+static u64 usedMemoryCount;
 
-static size_t allocatedMemory;
+static u64 allocatedMemory;
 
 
 static void delight_memory_used_memory_resize(void);
@@ -38,7 +38,7 @@ static void delight_memory_used_memory_resize(void);
 #endif
 #include <delight.h>
 
-void delight_memory_usage_report(ulong* allocationCount, size_t* totalAllocatedMemory)
+void memory_usage_report(u64* allocationCount, u64* totalAllocatedMemory)
 {	
 	if (allocationCount)
 	{
@@ -52,18 +52,18 @@ void delight_memory_usage_report(ulong* allocationCount, size_t* totalAllocatedM
 }
 
 
-void delight_memory_usage_request_location(const ulong allocation, const char * * const file, uint* line)
+void memory_usage_request_location(const u64 allocation, const char * * const file, u32* line)
 {
 	*file = usedMemory[allocation].requestLocation;
 	*line = usedMemory[allocation].requestLine;
 }
 
-size_t delight_memory_usage_allocation_amount(const ulong allocation)
+u64 memory_usage_allocation_amount(const u64 allocation)
 {
 	return usedMemory[allocation].allocationAmount;
 }
 
-void* delight_memory_usage_allocation_location(const ulong allocation)
+void* memory_usage_allocation_location(const u64 allocation)
 {
 	return usedMemory[allocation].allocationLocation;
 }
@@ -82,7 +82,7 @@ void* delight_memory_usage_allocation_location(const ulong allocation)
 #define realloc_internal(orgBuffer, size)		_delight_memory_realloc(orgBuffer, size, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 #define free_internal(what)						_delight_memory_free(what, _delight_string_make_relative_to_src(__FILE__), __LINE__)
 
-void* _delight_memory_malloc(const size_t amount, char* file, uint line)
+void* _delight_memory_malloc(const u64 amount, char* file, u32 line)
 {
 	void* ret = malloc(amount);
 
@@ -91,7 +91,7 @@ void* _delight_memory_malloc(const size_t amount, char* file, uint line)
 		return null;
 	}
 
-	if ((size_t)(usedMemoryCount) >= usedMemoryLength)
+	if (usedMemoryCount >= usedMemoryLength)
 	{
 		delight_memory_used_memory_resize();
 	}
@@ -109,7 +109,7 @@ void* _delight_memory_malloc(const size_t amount, char* file, uint line)
 	return ret;
 }
 
-void* _delight_memory_calloc(const size_t elementCount, const size_t elementSize, char* file, uint line)
+void* _delight_memory_calloc(const u64 elementCount, const u64 elementSize, char* file, u32 line)
 {
 	void* ret = calloc(elementCount, elementSize);
 
@@ -118,7 +118,7 @@ void* _delight_memory_calloc(const size_t elementCount, const size_t elementSize
 		return null;
 	}
 
-	if ((size_t)(usedMemoryCount) >= usedMemoryLength)
+	if (usedMemoryCount >= usedMemoryLength)
 	{
 		delight_memory_used_memory_resize();
 	}
@@ -136,7 +136,7 @@ void* _delight_memory_calloc(const size_t elementCount, const size_t elementSize
 }
 
 
-void* _delight_memory_realloc(void* orgBuffer, const size_t amount, char* file, uint line)
+void* _delight_memory_realloc(void* orgBuffer, const u64 amount, char* file, u32 line)
 {
 	void* ret = realloc(orgBuffer, amount);
 	
@@ -146,7 +146,7 @@ void* _delight_memory_realloc(void* orgBuffer, const size_t amount, char* file, 
 	}
 
 	MemoryAllocation* cur;
-	for (ulong i = 0; i < usedMemoryCount; i++)
+	for (u64 i = 0; i < usedMemoryCount; i++)
 	{
 		cur = &usedMemory[i];
 		if (orgBuffer == cur->allocationLocation)
@@ -168,10 +168,10 @@ void* _delight_memory_realloc(void* orgBuffer, const size_t amount, char* file, 
 	return null;
 }
 
-void _delight_memory_free(void* what, char* file, uint line)
+void _delight_memory_free(void* what, char* file, u32 line)
 {
 	MemoryAllocation* cur;
-	for (ulong i = 0; i < usedMemoryCount; i++)
+	for (u64 i = 0; i < usedMemoryCount; i++)
 	{
 		cur = &usedMemory[i];
 		if (what == cur->allocationLocation)

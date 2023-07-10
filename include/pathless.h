@@ -1,5 +1,5 @@
 /*
-* Pathless is a module dependant on Milk which implements various file I/O operations.
+* Pathless is a which implements various file I/O operations.
 * 
 * 
 * 
@@ -26,7 +26,7 @@ typedef void ConfigFile;
 /// @param onlyExtensions Files with which extensions should be returned. If all files should be permitted, pass {""}.
 /// @param extensionCount The number of file extensions in the onlyExtensions array. 0 means that no files will be permitted.
 /// @return An object which allows iterating over file.
-IterationFile* 					pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, const char** onlyExtensions, uint extensionCount);
+IterationFile* 					pathless_iterate_begin(const char* const path, bool recursive, bool allowDirs, const char** onlyExtensions, u32 extensionCount);
 
 /// @brief End iteration across directory, freeing this iteration file.
 /// @param file Which iteration file should be ended. 
@@ -57,19 +57,19 @@ void 							pathless_directory_close(Directory* directory);
 /// @param directory The directory we want to open.
 /// @param fileCount The number of files in the returned an array.
 /// @return The internal array of files this directory contains. This should NOT be freed.
-const char* const * const		pathless_directory_ls(Directory* directory, uint* fileCount);
+const char* const * const		pathless_directory_ls(Directory* directory, u32* fileCount);
 
 /// @brief Opens file at path as text file and copies its contents into the returned character buffer, writing that string's length to length if a valid pointer was passed.
 /// @param path The path to the text file we wish to read.
 /// @param length The length of the text file, assuming it was read.
 /// @return A null terminated character buffer containing the contents of the file at path, or NULL if there was an issue opening it.
-char*							pathless_file_read_as_text(const char* const path, size_t* length);
+char*							pathless_file_read_as_text(const char* const path, u64* length);
 
 /// @brief Creates a text file and copies buffer into it, up to length.
 /// @param path The path at which it creates the new file. 
 /// @param buffer The buffer we wish to copy.
 /// @param length The buffer's length. If 0, calculates the length of the buffer, presupposing it's null terminated.
-void							pathless_file_write_as_text(const char* const path, char* buffer, size_t length);
+void							pathless_file_write_as_text(const char* const path, char* buffer, u64 length);
 
 
 /// @brief Creates new, empty, config file object. 
@@ -129,7 +129,7 @@ bool							pathless_config_file_try_load_string(ConfigFile* file, const char* co
 /// @param key The key we wish to load from.
 /// @param value The read value, assuming it's valid and exists.
 /// @return Returns true if the config file contains a valid int under the provided path.
-bool							pathless_config_file_try_load_int(ConfigFile* file, const char* const category, const char* const key, int* value);
+bool							pathless_config_file_try_load_int(ConfigFile* file, const char* const category, const char* const key, i32* value);
 
 /// @brief Attempts to load a bool from file file, under category category, key key.
 /// @param file The file we wish to load from.
@@ -143,14 +143,14 @@ bool							pathless_config_file_try_load_bool(ConfigFile* file, const char* cons
 /// @param file The file from which we wish to get all categories.
 /// @param count Contains the number of categories contained by this file.
 /// @return The first element in a string array containing all categories.
-char**							pathless_config_file_get_categories(ConfigFile* file, uint* count);
+char**							pathless_config_file_get_categories(ConfigFile* file, u32* count);
 
 /// @brief Gets all keys in a category contained in this file.
 /// @param file The file from which we wish to get all keys.
 /// @param category The category from which we wish to get all keys.
 /// @param count Contains the number of keys this category has. 
 /// @return The first element in a string array containing all keys.
-char**							pathless_config_file_get_keys(ConfigFile* file, const char* const category, uint* count);
+char**							pathless_config_file_get_keys(ConfigFile* file, const char* const category, u32* count);
 
 /// @brief Removes specified key from this config file.
 /// @param file The file we wish to remove a key from.

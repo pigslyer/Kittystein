@@ -1,10 +1,10 @@
 #include "d_internal.h"
 #include <watchman.h>
 
-char* delight_convert_int_to_string(int val)
+char* convert_i32_to_string(i32 val)
 {
 	char* ret = malloc(12 * sizeof(char));
-	uint idx = 0;
+	u32 idx = 0;
 
 	if (val < 0)
 	{
@@ -13,7 +13,7 @@ char* delight_convert_int_to_string(int val)
 	}
 
 	char buffer[12];
-	uint i = 0;
+	u32 i = 0;
 
 	while (val > 0)
 	{
@@ -21,7 +21,7 @@ char* delight_convert_int_to_string(int val)
 		val /= 10;
 	}
 
-	for (uint j = 0; j < i; j++)
+	for (u32 j = 0; j < i; j++)
 	{
 		ret[idx++] = buffer[i - j - 1];
 	}
@@ -31,15 +31,15 @@ char* delight_convert_int_to_string(int val)
 	return ret;
 }
 
-char* delight_convert_bool_to_string(bool val)
+char* convert_bool_to_string(bool val)
 {
-	return delight_string_copy(val ? "true" : "false");
+	return string_copy(val ? "true" : "false");
 }
 
-int delight_convert_string_to_int(char* str)
+i32 convert_string_to_i32(char* str)
 {
 
-	int ret = 0;
+	i32 ret = 0;
 
 	bool neg = str[0] == '-';
 
@@ -56,7 +56,7 @@ int delight_convert_string_to_int(char* str)
 	return ret;
 }
 
-bool delight_convert_string_to_bool(char* str)
+bool convert_string_to_bool(char* str)
 {
-	return !delight_string_equals(str, "false");
+	return !string_equals(str, "false");
 }
